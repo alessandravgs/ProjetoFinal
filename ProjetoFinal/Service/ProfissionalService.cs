@@ -19,7 +19,7 @@ namespace ProjetoFinal.Service
             _configuration = configuration;
         }
 
-        public async Task<string> LoginProfissional(LoginModel login)
+        public async Task<string> LoginProfissionalAsync(LoginModel login)
         {
             var user = await _repositorio.GetProfissional(login);
             if (user == null)
@@ -46,7 +46,7 @@ namespace ProjetoFinal.Service
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task RegistrarProfissional(Profissional profissional)
+        public async Task RegistrarProfissionalAsync(Profissional profissional)
         {
             var salvou = await _repositorio.SaveProfissional(profissional);
 
@@ -54,13 +54,13 @@ namespace ProjetoFinal.Service
                 throw new BadHttpRequestException("Erro ao Salvar Profissional.");
         }
 
-        public async Task<IEnumerable<Curativo>> GetCurativosByProfissionalId(int id)
+        public async Task<IEnumerable<Curativo>> GetCurativosByProfissionalIdAsync(int id)
         {
             var lista = await _repositorio.GetCurativosByProfissionalAsync(id);
             return lista;
         }
 
-        public async Task<IEnumerable<Paciente>> GetPacientesByProfissional(int id)
+        public async Task<IEnumerable<Paciente>> GetPacientesByProfissionalAsync(int id)
         {
             var lista = await _repositorio.GetPacientesByProfissional(id);
             return lista;

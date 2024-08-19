@@ -28,7 +28,7 @@ namespace ProjetoFinal.Controllers
         {
             try
             {
-                await _service.RegistrarProfissional(profissional);
+                await _service.RegistrarProfissionalAsync(profissional);
                 return Ok();
             }
             catch (BadHttpRequestException ex)
@@ -46,7 +46,7 @@ namespace ProjetoFinal.Controllers
         {
             try
             {
-                var token = await _service.LoginProfissional(login);
+                var token = await _service.LoginProfissionalAsync(login);
                 return Ok(new { Token = token });
             }
             catch (UnauthorizedAccessException ex)
@@ -86,7 +86,7 @@ namespace ProjetoFinal.Controllers
                 return Unauthorized("ID do profissional não encontrado no token.");
             }
 
-            var curativos = await _service.GetCurativosByProfissionalId(profissionalId);
+            var curativos = await _service.GetCurativosByProfissionalIdAsync(profissionalId);
 
             if (curativos == null || !curativos.Any())
             {
@@ -107,7 +107,7 @@ namespace ProjetoFinal.Controllers
                 return Unauthorized("ID do profissional não encontrado no token.");
             }
 
-            var curativos = await _service.GetCurativosByProfissionalId(profissionalId);
+            var curativos = await _service.GetCurativosByProfissionalIdAsync(profissionalId);
 
             if (curativos == null || !curativos.Any())
             {

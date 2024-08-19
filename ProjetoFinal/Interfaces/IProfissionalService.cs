@@ -5,9 +5,9 @@ namespace ProjetoFinal.Interfaces
 {
     public interface IProfissionalService
     {
-        Task<string> LoginProfissional(LoginModel login);
-        Task RegistrarProfissional(Profissional profissional);
-        Task<IEnumerable<Curativo>> GetCurativosByProfissionalId(int id);
-        Task<IEnumerable<Paciente>> GetPacientesByProfissional(int id);
+        Task<string> LoginProfissionalAsync(LoginModel login);
+        Task RegistrarProfissionalAsync(Profissional profissional);
+        Task<IEnumerable<Curativo>> GetCurativosByProfissionalIdAsync(int id);
+        Task<IEnumerable<Paciente>> GetPacientesByProfissionalAsync(int id);
     }
 }
