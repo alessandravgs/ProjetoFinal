@@ -11,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IRepositorioProfissional, RepositorioProfissional>();
 builder.Services.AddScoped<IProfissionalService, ProfissionalService>();
+builder.Services.AddScoped<IRepositorioPaciente, RepositorioPaciente>();
+builder.Services.AddScoped<IPacienteService, PacienteService>();
+builder.Services.AddScoped<IRepositorioCurativo, RepositorioCurativo>();
+builder.Services.AddScoped<ICurativoService, CurativoService>();
 
 
 // Captura a configuração JWT
