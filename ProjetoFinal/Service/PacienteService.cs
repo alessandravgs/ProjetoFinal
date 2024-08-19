@@ -1,5 +1,6 @@
 ﻿using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
+using ProjetoFinal.Requests;
 
 namespace ProjetoFinal.Service
 {
@@ -14,8 +15,15 @@ namespace ProjetoFinal.Service
             _configuration = configuration;
         }
 
-        public async Task RegistrarPacienteAsync(Paciente paciente)
+        public async Task RegistrarPacienteAsync(RegisterPacienteRequest pacienteRequest)
         {
+            var paciente = new Paciente()
+            {
+                Nome = pacienteRequest.Nome,
+                Cpf = pacienteRequest.Cpf,
+                DataNascimento = pacienteRequest.DataNascimento,
+            };
+
             var salvou = await _repositorio.SavePacienteAsync(paciente);
 
             if (!salvou)

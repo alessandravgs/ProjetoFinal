@@ -2,6 +2,7 @@
 using ProjetoFinal.Data;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
+using System.Linq.Expressions;
 
 namespace ProjetoFinal.Repositorios
 {
@@ -13,14 +14,14 @@ namespace ProjetoFinal.Repositorios
             _context = context;
         }
 
-        public async Task<Curativo?> GetCurativoByCondicaoAsync(Func<Curativo, bool> condicao)
+        public async Task<Curativo?> GetCurativoByCondicaoAsync(Expression<Func<Curativo, bool>> condicao)
         {
-            return await _context.Curativos.FirstOrDefaultAsync(p => condicao(p));
+            return await _context.Curativos.FirstOrDefaultAsync(condicao);
         }
 
-        public async Task<IEnumerable<Curativo>> GetListagemCurativosByCondicaoAsync(Func<Curativo, bool> condicao)
+        public async Task<IEnumerable<Curativo>> GetListagemCurativosByCondicaoAsync(Expression<Func<Curativo, bool>> condicao)
         {
-            return await _context.Curativos.Where(p => condicao(p)).ToListAsync();
+            return await _context.Curativos.Where(condicao).ToListAsync();
         }
 
         public async Task<bool> SaveCurativoAsync(Curativo curativo)

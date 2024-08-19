@@ -43,7 +43,7 @@ namespace ProjetoFinal.Repositorios
 
         public async Task<IEnumerable<Paciente>> GetPacientesByProfissional(int id)
         {
-            return await _context.Pacientes.Where(c => c.Curativos.Any(x => x.Profissional.Id == id)).ToListAsync();
+            return new List<Paciente>();
         }
     }
 }

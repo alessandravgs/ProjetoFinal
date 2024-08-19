@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
+using ProjetoFinal.Requests;
 
 namespace ProjetoFinal.Controllers
 {
@@ -17,7 +18,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Paciente paciente)
+        public async Task<IActionResult> Register([FromBody] RegisterPacienteRequest paciente)
         {
             try
             {
@@ -35,7 +36,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("buscar")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPaciente(string parametro)
         {
             if (string.IsNullOrEmpty(parametro))
