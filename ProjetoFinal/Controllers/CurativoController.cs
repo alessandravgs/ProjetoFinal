@@ -102,27 +102,6 @@ namespace ProjetoFinal.Controllers
             }           
         }
 
-        [HttpPost("register/lesao")]
-        [Authorize]
-        public async Task<IActionResult> Register([FromBody] RegisterLesaoRequest lesao)
-        {
-            try
-            {
-                await _service.RegistrarLesaoAsync(lesao);
-                return Ok();
-            }
-            catch (BadHttpRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (FileNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        
     }
 }

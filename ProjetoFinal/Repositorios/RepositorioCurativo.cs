@@ -79,18 +79,80 @@ namespace ProjetoFinal.Repositorios
             };
         }
 
-        public async Task<bool> SaveLesaoAsync(Lesao lesao)
+        public async Task<IEnumerable<PacienteCurativoRelatorio>> GetRelatorioCurativosTotaisPacienteAsync(int idPaciente)
         {
-            try
-            {
-                _context.Lesoes.Add(lesao);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            var consulta = _context.Curativos.Where(x => x.Lesao.Paciente.Id == idPaciente);
+            return await GetPacienteCurativoRelatorio(consulta);
         }
+
+        public async Task<IEnumerable<PacienteCurativoRelatorio>> GetRelatorioCurativosPorPeriodoPacienteAsync(int idPaciente, DateTime dataInicial, DateTime dataFinal)
+        {
+            var consulta = _context.Curativos.Where(x => x.Lesao.Paciente.Id == idPaciente && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataInicial.Date);
+            return await GetPacienteCurativoRelatorio(consulta);
+        }
+
+        private async Task<IEnumerable<PacienteCurativoRelatorio>> GetPacienteCurativoRelatorio(IQueryable<Curativo> consulta)
+        {
+            return await consulta.GroupBy(x => new { x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento })
+                .Select(x => new PacienteCurativoRelatorio()
+                {
+                    NomePaciente = x.Key.Nome,
+                    Sexo = x.Key.Sexo,
+                    DataNascimento = x.Key.DataNascimento,
+                    Curativos = x.Select(y => new DetalhesCurativoRelatorio
+                    {
+                        Coberturas = y.Coberturas.ToList(),
+                        Data = y.Data,
+                        Lesao = y.Lesao.Detalhes,
+                        Observacoes = y.Observacoes,
+                        Orientacoes = y.Orientacoes,
+                        Profissional = y.Profissional.Nome,
+                    }).ToList()
+                }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ProfissionalCurativoRelatorio>> GetRelatorioCurativosPorPeriodoProfissionalAsync(int idProfissional, DateTime dataInicial, DateTime dataFinal)
+        {
+            return await _context.Curativos.Where(x => x.Profissional.Id == idProfissional && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataInicial.Date)
+                .GroupBy(x => new { x.Profissional.Nome, x.Profissional.Cpf, x.Profissional.Email })
+                .Select(x => new ProfissionalCurativoRelatorio
+                {
+                    NomeProfissional = x.Key.Nome,
+                    CpfProfissional = x.Key.Cpf,
+                    EmailProfissional = x.Key.Email,
+                    Curativos = x.Select(y => new DetalhesCurativoProfissionalRelatorio
+                    {
+                        Coberturas = y.Coberturas.ToList(),
+                        Data = y.Data,
+                        Lesao = y.Lesao.Detalhes,
+                        Observacoes = y.Observacoes,
+                        Orientacoes = y.Orientacoes,
+                        NomePaciente = y.Lesao.Paciente.Nome,
+                        SexoPaciente = y.Lesao.Paciente.Sexo
+                    }).ToList()
+                }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<LesaoCurativoRelatorio>> GetRelatorioCurativosByLesao(int idLesao)
+        {
+            return await _context.Curativos.Where(x => x.Lesao.Id == idLesao)
+                .GroupBy(x => new { x.Lesao.Detalhes, x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento })
+                .Select(x => new LesaoCurativoRelatorio
+                {
+                    Lesao = x.Key.Detalhes,
+                    NomePaciente = x.Key.Nome,
+                    Sexo = x.Key.Sexo,
+                    DataNascimento = x.Key.DataNascimento,
+                    Curativos = x.Select(y => new CurativosLesaoDetalhes
+                    {
+                        Coberturas = y.Coberturas.ToList(),
+                        Data = y.Data,
+                        Observacoes = y.Observacoes,
+                        Orientacoes = y.Orientacoes,
+                        Profissional = y.Profissional.Nome,
+                    }).ToList()
+                }).ToListAsync();
+        }
+
     }
 }

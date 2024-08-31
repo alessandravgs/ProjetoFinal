@@ -11,6 +11,9 @@ namespace ProjetoFinal.Interfaces
         Task<bool> SaveCurativoAsync(Curativo curativo);
         Task<IEnumerable<CurativoResumoResult>> GetUltimosCurativos(int idProfissional);
         Task<PaginacaoResult<CurativoResumoResult>> GetCurativosByProfissionalAsync(int idProfissional, int pageNumber, int pageSize);
-        Task<bool> SaveLesaoAsync(Lesao lesao);
+        Task<IEnumerable<PacienteCurativoRelatorio>> GetRelatorioCurativosTotaisPacienteAsync(int idPaciente);
+        Task<IEnumerable<PacienteCurativoRelatorio>> GetRelatorioCurativosPorPeriodoPacienteAsync(int idPaciente, DateTime dataInicial, DateTime dataFinal);
+        Task<IEnumerable<ProfissionalCurativoRelatorio>> GetRelatorioCurativosPorPeriodoProfissionalAsync(int idProfissional, DateTime dataInicial, DateTime dataFinal);
+        Task<IEnumerable<LesaoCurativoRelatorio>> GetRelatorioCurativosByLesao(int idLesao);
     }
 }

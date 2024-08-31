@@ -9,6 +9,5 @@ namespace ProjetoFinal.Interfaces
         Task<Curativo?> GetCurativoAsync(int parametro);
         Task<IEnumerable<CurativoResumoResult>> GetUltimosCurativos(int idProfissional);
         Task<PaginacaoResult<CurativoResumoResult>> GetPagesCurativosByProfissionalAsync(int profissionalId, int pageNumber, int pageSize);
-        Task RegistrarLesaoAsync(RegisterLesaoRequest lesaoRequest);
     }
 }
