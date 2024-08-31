@@ -2,6 +2,7 @@
 using ProjetoFinal.Data;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
+using ProjetoFinal.Requests;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -32,6 +33,31 @@ namespace ProjetoFinal.Repositorios
             {
                 return false;
             }
+        }
+
+        public async Task<PaginacaoResult<PacienteResumoResult>> GetPacientesByProfissional(int idProfissional, int pageNumber, int pageSize)
+        {
+            var query = _context.Curativos.Where(x => x.Profissional.Id == idProfissional).Select(x => x.Lesao.Paciente).Distinct();
+            var totalItems = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new PacienteResumoResult
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    DataNascimento = x.DataNascimento,
+                    Sexo = x.Sexo,
+                })
+                .ToListAsync();
+
+            return new PaginacaoResult<PacienteResumoResult>()
+            {
+                TotalItems = totalItems,
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
     }

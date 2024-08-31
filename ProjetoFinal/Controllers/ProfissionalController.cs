@@ -59,15 +59,6 @@ namespace ProjetoFinal.Controllers
             }
         }
 
-        //[HttpPost("save-patient")]
-        //[Authorize]
-        //public async Task<IActionResult> SavePatient([FromBody] Paciente paciente)
-        //{
-        //    _context.Pacientes.Add(paciente);
-        //    await _context.SaveChangesAsync();
-        //    return Ok();
-        //}
-
         [HttpGet("ping")]
         [Authorize]
         public IActionResult Ping()

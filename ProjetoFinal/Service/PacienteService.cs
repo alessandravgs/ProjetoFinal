@@ -1,6 +1,8 @@
 ﻿using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
+using ProjetoFinal.Repositorios;
 using ProjetoFinal.Requests;
+using System.Reflection.Metadata;
 
 namespace ProjetoFinal.Service
 {
@@ -33,6 +35,11 @@ namespace ProjetoFinal.Service
         public async Task<Paciente?> GetPacienteAsync(string parametro)
         {
             return await _repositorio.GetPacienteByCondicaoAsync(x => x.Cpf == parametro);
+        }
+
+        public async Task<PaginacaoResult<PacienteResumoResult>> GetPagedPacientesByProfissionalAsync(int profissionalId, int pageNumber, int pageSize)
+        {
+            return await _repositorio.GetPacientesByProfissional(profissionalId, pageNumber, pageSize);
         }
     }
 }

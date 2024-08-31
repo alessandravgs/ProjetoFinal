@@ -1,18 +1,17 @@
-﻿namespace ProjetoFinal.Models
+﻿using ProjetoFinal.Models.Enums;
+
+namespace ProjetoFinal.Models
 {
     public class Lesao
     {
         public int Id { get; set; }
-        //Tipo Membro
-        public string Membro { get; set; }
-        //Tipo Regiao
-        public string Regiao { get; set; }
-        //Tipo Situacao
-        public string Situacao { get; set; }
+        public Membro Membro { get; set; }
+        public Regiao Regiao { get; set; }
+        public LadoRegiao LadoRegiao { get; set; }
+        public Situacao Situacao { get; set; }
         public bool Cirurgica { get; set; }
         public bool Infectada { get; set; }
-        //Tipo Ulcera
-        public string UlceraVenosa { get; set; }
+        public TipoUlcera UlceraVenosa { get; set; }
         public bool DeiscenciaCirurgica { get; set; }
         public bool Hanseniase { get; set; }
         public bool Miiase { get; set; }
