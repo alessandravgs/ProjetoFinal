@@ -48,12 +48,12 @@ namespace ProjetoFinal.Service
             return await _repositorio.GetPacientesByProfissional(profissionalId, pageNumber, pageSize);
         }
 
-        public async Task<List<Alergia>> GetAlergiasAsync()
+        public async Task<List<AlergiaComorbidadeResumoResult>> GetAlergiasAsync()
         {
             return await _repositorio.GetAlergiasAsync();
         }
 
-        public async Task<List<Comorbidade>> GetComorbidadesAsync()
+        public async Task<List<AlergiaComorbidadeResumoResult>> GetComorbidadesAsync()
         {
             return await _repositorio.GetComorbidadesAsync();
         }

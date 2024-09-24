@@ -63,9 +63,15 @@ namespace ProjetoFinal.Repositorios
             };
         }
 
-        public async Task<List<Alergia>> GetAlergiasAsync()
+        public async Task<List<AlergiaComorbidadeResumoResult>> GetAlergiasAsync()
         {
-            return await _context.Alergias.ToListAsync();
+            return await _context.Alergias
+                .Select(x => new AlergiaComorbidadeResumoResult()
+                {
+                    Id = x.Id,
+                    Nome = x.Nome
+                })
+                .ToListAsync();
         }
 
         public async Task<List<Alergia>> GetAlergiasByListIdAsync(List<int> alergiasId)
@@ -75,9 +81,14 @@ namespace ProjetoFinal.Repositorios
                 .ToListAsync();
         }
 
-        public async Task<List<Comorbidade>> GetComorbidadesAsync()
+        public async Task<List<AlergiaComorbidadeResumoResult>> GetComorbidadesAsync()
         {
-            return await _context.Comorbidades.ToListAsync();
+            return await _context.Comorbidades
+                .Select(x => new AlergiaComorbidadeResumoResult()
+                {
+                    Id = x.Id,
+                    Nome = x.Nome
+                }).ToListAsync();
         }
 
         public async Task<List<Comorbidade>> GetComorbidadesByListIdAsync(List<int> comorbidadesId)
