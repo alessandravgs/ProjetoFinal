@@ -9,6 +9,7 @@
         Eritematosa,
         Maceracao,
         Bolhosa,
-        Fibrinosa
+        Fibrinosa,
+        Fechada
     }
 }

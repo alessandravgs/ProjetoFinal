@@ -7,7 +7,11 @@ namespace ProjetoFinal.Interfaces
     public interface IRepositorioPaciente
     {
         Task<Paciente?> GetPacienteByCondicaoAsync(Expression<Func<Paciente, bool>> condicao);
-        Task<bool> SavePacienteAsync(Paciente paciente);
+        Task<Paciente> SavePacienteAsync(Paciente paciente);
         Task<PaginacaoResult<PacienteResumoResult>> GetPacientesByProfissional(int idProfissional, int pageNumber, int pageSize);
+        Task<List<Alergia>> GetAlergiasAsync();
+        Task<List<Comorbidade>> GetComorbidadesAsync();
+        Task<List<Alergia>> GetAlergiasByListIdAsync(List<int> alergiasId);
+        Task<List<Comorbidade>> GetComorbidadesByListIdAsync(List<int> comorbidadesId);
     }
 }

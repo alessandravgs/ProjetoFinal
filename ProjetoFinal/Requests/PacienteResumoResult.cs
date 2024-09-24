@@ -8,5 +8,6 @@ namespace ProjetoFinal.Requests
         public string Nome { get; set; }
         public Sexo Sexo { get; set; }
         public DateTime DataNascimento { get; set; }
+        public string Cpf { get; set; }
     }
 }

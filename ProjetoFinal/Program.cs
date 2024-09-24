@@ -15,7 +15,9 @@ builder.Services.AddScoped<IRepositorioPaciente, RepositorioPaciente>();
 builder.Services.AddScoped<IPacienteService, PacienteService>();
 builder.Services.AddScoped<IRepositorioCurativo, RepositorioCurativo>();
 builder.Services.AddScoped<ICurativoService, CurativoService>();
-
+builder.Services.AddScoped<IRelatorioService, RelatorioService>();
+builder.Services.AddScoped<IRepositorioCobertura, RepositorioCobertura>();
+builder.Services.AddScoped<ICoberturaService, CoberturaService>();
 
 // Captura a configuração JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -56,6 +58,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+// Adicionando o serviço CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -74,6 +87,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Habilitando o CORS
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();

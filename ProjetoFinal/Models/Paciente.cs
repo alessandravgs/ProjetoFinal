@@ -9,6 +9,10 @@ namespace ProjetoFinal.Models
         public string Cpf { get; set; }
         public DateTime DataNascimento { get; set; }
         public Sexo Sexo { get; set; }
+        public string Telefone { get; set; }
+        public string Email { get; set; }
+        public virtual ICollection<Alergia> Alergias { get; set; }
+        public virtual ICollection<Comorbidade> Comorbidades { get; set; }
         public virtual ICollection<Lesao> Lesoes { get; set; } = new List<Lesao>();
     }
 }

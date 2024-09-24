@@ -18,7 +18,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Register([FromBody] RegisterPacienteRequest paciente)
         {
             try
@@ -37,7 +37,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("buscar")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPaciente(string parametro)
         {
             if (string.IsNullOrEmpty(parametro))
@@ -56,7 +56,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("paginado")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPagedPacientesByProfissional([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
@@ -76,6 +76,22 @@ namespace ProjetoFinal.Controllers
                 return BadRequest(ex.Message);
 
             }           
+        }
+
+        [HttpGet("alergias")]
+        //[Authorize]
+        public async Task<IActionResult> GetAlergias()
+        {
+            var paciente = await _service.GetAlergiasAsync();
+            return Ok(paciente);
+        }
+
+        [HttpGet("comorbidades")]
+        //[Authorize]
+        public async Task<IActionResult> GetComorbidades()
+        {
+            var paciente = await _service.GetComorbidadesAsync();
+            return Ok(paciente);
         }
     }
 }

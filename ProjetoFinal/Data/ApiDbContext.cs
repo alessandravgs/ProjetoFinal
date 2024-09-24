@@ -23,6 +23,14 @@ namespace ProjetoFinal.Data
             modelBuilder.Entity<Curativo>()
                 .HasMany(c => c.Coberturas)
                 .WithMany(c => c.Curativos);
+
+            modelBuilder.Entity<Paciente>()
+                .HasMany(c => c.Alergias)
+                .WithMany(c => c.Pacientes);
+
+            modelBuilder.Entity<Paciente>()
+                .HasMany(c => c.Comorbidades)
+                .WithMany(c => c.Pacientes);
         }
 
         public DbSet<Paciente> Pacientes { get; set; }

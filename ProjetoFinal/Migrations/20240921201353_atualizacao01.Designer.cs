@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetoFinal.Data;
 
@@ -11,9 +12,11 @@ using ProjetoFinal.Data;
 namespace ProjetoFinal.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240921201353_atualizacao01")]
+    partial class atualizacao01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,21 +27,6 @@ namespace ProjetoFinal.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AlergiaPaciente", b =>
-                {
-                    b.Property<int>("AlergiasId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PacientesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AlergiasId", "PacientesId");
-
-                    b.HasIndex("PacientesId");
-
-                    b.ToTable("AlergiaPaciente");
-                });
 
             modelBuilder.Entity("CoberturaCurativo", b =>
                 {
@@ -55,21 +43,6 @@ namespace ProjetoFinal.Migrations
                     b.ToTable("CoberturaCurativo");
                 });
 
-            modelBuilder.Entity("ComorbidadePaciente", b =>
-                {
-                    b.Property<int>("ComorbidadesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PacientesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ComorbidadesId", "PacientesId");
-
-                    b.HasIndex("PacientesId");
-
-                    b.ToTable("ComorbidadePaciente");
-                });
-
             modelBuilder.Entity("ProjetoFinal.Models.Alergia", b =>
                 {
                     b.Property<int>("Id")
@@ -77,6 +50,10 @@ namespace ProjetoFinal.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -115,6 +92,10 @@ namespace ProjetoFinal.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -262,20 +243,12 @@ namespace ProjetoFinal.Migrations
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Sexo")
                         .HasColumnType("int");
-
-                    b.Property<string>("Telefone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -315,21 +288,6 @@ namespace ProjetoFinal.Migrations
                     b.ToTable("Profissionais");
                 });
 
-            modelBuilder.Entity("AlergiaPaciente", b =>
-                {
-                    b.HasOne("ProjetoFinal.Models.Alergia", null)
-                        .WithMany()
-                        .HasForeignKey("AlergiasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProjetoFinal.Models.Paciente", null)
-                        .WithMany()
-                        .HasForeignKey("PacientesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CoberturaCurativo", b =>
                 {
                     b.HasOne("ProjetoFinal.Models.Cobertura", null)
@@ -341,21 +299,6 @@ namespace ProjetoFinal.Migrations
                     b.HasOne("ProjetoFinal.Models.Curativo", null)
                         .WithMany()
                         .HasForeignKey("CurativosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ComorbidadePaciente", b =>
-                {
-                    b.HasOne("ProjetoFinal.Models.Comorbidade", null)
-                        .WithMany()
-                        .HasForeignKey("ComorbidadesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProjetoFinal.Models.Paciente", null)
-                        .WithMany()
-                        .HasForeignKey("PacientesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
