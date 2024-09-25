@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoFinal.Interfaces;
-using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Coberturas;
 using System.Security.Claims;
 
 namespace ProjetoFinal.Controllers

@@ -1,6 +1,7 @@
 ﻿using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
 using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Coberturas;
 
 namespace ProjetoFinal.Service
 {

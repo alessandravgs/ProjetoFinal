@@ -1,4 +1,4 @@
-﻿namespace ProjetoFinal.Requests
+﻿namespace ProjetoFinal.Requests.Curativo
 {
     public class CurativoResumoResult
     {

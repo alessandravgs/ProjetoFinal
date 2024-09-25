@@ -1,5 +1,7 @@
 ﻿using ProjetoFinal.Models;
 using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Curativo;
+using ProjetoFinal.Requests.Relatorios;
 using System.Linq.Expressions;
 
 namespace ProjetoFinal.Interfaces

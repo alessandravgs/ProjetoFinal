@@ -1,6 +1,6 @@
 ﻿using ProjetoFinal.Models.Enums;
 
-namespace ProjetoFinal.Requests
+namespace ProjetoFinal.Requests.Relatorios
 {
     public class PacienteCurativoRelatorio
     {

@@ -1,5 +1,4 @@
-﻿
-namespace ProjetoFinal.Requests
+﻿namespace ProjetoFinal.Requests.Relatorios
 {
     public class ProfissionalCurativoRelatorio
     {

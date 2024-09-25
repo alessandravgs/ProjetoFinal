@@ -1,4 +1,4 @@
-﻿using ProjetoFinal.Requests;
+﻿using ProjetoFinal.Requests.Relatorios;
 
 namespace ProjetoFinal.Interfaces
 {

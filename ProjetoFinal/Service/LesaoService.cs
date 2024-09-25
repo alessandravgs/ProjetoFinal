@@ -1,6 +1,6 @@
 ﻿using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
-using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Lesao;
 
 namespace ProjetoFinal.Service
 {

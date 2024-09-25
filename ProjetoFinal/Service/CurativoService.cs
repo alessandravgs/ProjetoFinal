@@ -3,6 +3,7 @@ using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
 using ProjetoFinal.Repositorios;
 using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Curativo;
 
 namespace ProjetoFinal.Service
 {

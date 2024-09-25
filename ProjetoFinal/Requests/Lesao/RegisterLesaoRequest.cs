@@ -1,12 +1,12 @@
 ﻿using ProjetoFinal.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjetoFinal.Requests
+namespace ProjetoFinal.Requests.Lesao
 {
     public record RegisterLesaoRequest(
-        [Required] int PacienteId, 
-        [Required] Membro Membro, 
-        [Required] Regiao Regiao, 
+        [Required] int PacienteId,
+        [Required] Membro Membro,
+        [Required] Regiao Regiao,
         [Required] LadoRegiao LadoRegiao,
         [Required] Situacao Situacao,
         bool Cirurgica,

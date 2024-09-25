@@ -1,5 +1,6 @@
 ﻿using ProjetoFinal.Models;
 using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Curativo;
 
 namespace ProjetoFinal.Interfaces
 {

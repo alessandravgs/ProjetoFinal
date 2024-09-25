@@ -1,5 +1,5 @@
 ﻿using ProjetoFinal.Interfaces;
-using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Relatorios;
 using System.Collections.Generic;
 
 namespace ProjetoFinal.Service
