@@ -12,8 +12,8 @@ using ProjetoFinal.Data;
 namespace ProjetoFinal.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20240924055925_atualizao03")]
-    partial class atualizao03
+    [Migration("20240925224200_atualizacao01")]
+    partial class atualizacao01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -136,14 +136,8 @@ namespace ProjetoFinal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Altura")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Largura")
-                        .HasColumnType("int");
 
                     b.Property<int>("LesaoId")
                         .HasColumnType("int");
@@ -159,9 +153,6 @@ namespace ProjetoFinal.Migrations
                     b.Property<int>("ProfissionalId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Profundidade")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("LesaoId");
@@ -169,6 +160,50 @@ namespace ProjetoFinal.Migrations
                     b.HasIndex("ProfissionalId");
 
                     b.ToTable("Curativos");
+                });
+
+            modelBuilder.Entity("ProjetoFinal.Models.EvolucaoLesao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Altura")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurativoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Largura")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LesaoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProfissionalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Profundidade")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Situacao")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurativoId")
+                        .IsUnique();
+
+                    b.HasIndex("LesaoId");
+
+                    b.HasIndex("ProfissionalId");
+
+                    b.ToTable("EvolucaoLesao");
                 });
 
             modelBuilder.Entity("ProjetoFinal.Models.ImagemCurativo", b =>
@@ -241,6 +276,9 @@ namespace ProjetoFinal.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("UlceraVenosa")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UltimaEvolucaoId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -382,6 +420,33 @@ namespace ProjetoFinal.Migrations
                     b.Navigation("Profissional");
                 });
 
+            modelBuilder.Entity("ProjetoFinal.Models.EvolucaoLesao", b =>
+                {
+                    b.HasOne("ProjetoFinal.Models.Curativo", "Curativo")
+                        .WithOne("EvolucaoLesao")
+                        .HasForeignKey("ProjetoFinal.Models.EvolucaoLesao", "CurativoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjetoFinal.Models.Lesao", "Lesao")
+                        .WithMany("Evolucoes")
+                        .HasForeignKey("LesaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjetoFinal.Models.Profissional", "Profissional")
+                        .WithMany()
+                        .HasForeignKey("ProfissionalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curativo");
+
+                    b.Navigation("Lesao");
+
+                    b.Navigation("Profissional");
+                });
+
             modelBuilder.Entity("ProjetoFinal.Models.ImagemCurativo", b =>
                 {
                     b.HasOne("ProjetoFinal.Models.Curativo", "Curativo")
@@ -406,12 +471,17 @@ namespace ProjetoFinal.Migrations
 
             modelBuilder.Entity("ProjetoFinal.Models.Curativo", b =>
                 {
+                    b.Navigation("EvolucaoLesao")
+                        .IsRequired();
+
                     b.Navigation("Imagens");
                 });
 
             modelBuilder.Entity("ProjetoFinal.Models.Lesao", b =>
                 {
                     b.Navigation("Curativos");
+
+                    b.Navigation("Evolucoes");
                 });
 
             modelBuilder.Entity("ProjetoFinal.Models.Paciente", b =>

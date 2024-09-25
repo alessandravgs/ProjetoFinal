@@ -31,6 +31,12 @@ namespace ProjetoFinal.Data
             modelBuilder.Entity<Paciente>()
                 .HasMany(c => c.Comorbidades)
                 .WithMany(c => c.Pacientes);
+
+            modelBuilder.Entity<EvolucaoLesao>()
+                .HasOne(e => e.Curativo)
+                .WithOne(c => c.EvolucaoLesao)
+                .HasForeignKey<EvolucaoLesao>(e => e.CurativoId) 
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<Paciente> Pacientes { get; set; }
@@ -41,5 +47,6 @@ namespace ProjetoFinal.Data
         public DbSet<Cobertura> Coberturas { get; set; }
         public DbSet<ImagemCurativo> ImagensCurativos { get; set; }
         public DbSet<Profissional> Profissionais { get; set; }
+        public DbSet<EvolucaoLesao> EvolucaoLesao { get; set; }
     }
 }

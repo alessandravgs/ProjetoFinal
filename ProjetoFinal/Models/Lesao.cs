@@ -19,8 +19,8 @@ namespace ProjetoFinal.Models
         public bool Desbridamento { get; set; }
         public bool Traumatica { get; set; }
         public string Detalhes { get; set; }
+        public int UltimaEvolucaoId { get; set; }
         public virtual Paciente Paciente { get; set; }
-        public EvolucaoLesao UltimaEvolucao { get; set; }
         public virtual ICollection<Curativo> Curativos { get; set; }
         public virtual ICollection<EvolucaoLesao> Evolucoes { get; set; }
     }

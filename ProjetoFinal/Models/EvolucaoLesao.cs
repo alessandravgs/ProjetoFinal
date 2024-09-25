@@ -11,6 +11,7 @@ namespace ProjetoFinal.Models
         public int Profundidade { get; set; }
         public Situacao Situacao { get; set; }
         public virtual Lesao Lesao { get; set; }
+        public int CurativoId { get; set; }
         public virtual Curativo Curativo { get; set; }
         public virtual Profissional Profissional { get; set; }
     }
