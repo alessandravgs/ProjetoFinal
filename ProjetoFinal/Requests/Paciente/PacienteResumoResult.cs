@@ -1,6 +1,6 @@
 ﻿using ProjetoFinal.Models.Enums;
 
-namespace ProjetoFinal.Requests
+namespace ProjetoFinal.Requests.Paciente
 {
     public class PacienteResumoResult
     {
@@ -9,5 +9,6 @@ namespace ProjetoFinal.Requests
         public Sexo Sexo { get; set; }
         public DateTime DataNascimento { get; set; }
         public string Cpf { get; set; }
+        public string Telefone { get; set; }
     }
 }

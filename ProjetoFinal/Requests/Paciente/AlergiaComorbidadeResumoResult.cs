@@ -1,4 +1,4 @@
-﻿namespace ProjetoFinal.Requests
+﻿namespace ProjetoFinal.Requests.Paciente
 {
     public class AlergiaComorbidadeResumoResult
     {

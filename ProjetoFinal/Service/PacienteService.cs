@@ -1,7 +1,9 @@
-﻿using ProjetoFinal.Interfaces;
+﻿using ProjetoFinal.Helpers;
+using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
 using ProjetoFinal.Repositorios;
 using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Paciente;
 using System.Reflection.Metadata;
 
 namespace ProjetoFinal.Service
@@ -17,15 +19,18 @@ namespace ProjetoFinal.Service
             _configuration = configuration;
         }
 
-        public async Task<Paciente> RegistrarPacienteAsync(RegisterPacienteRequest pacienteRequest)
+        public async Task<PacienteDto> RegistrarPacienteAsync(RegisterPacienteRequest pacienteRequest)
         {
+            if (!StringHelpers.IsValidCPF(pacienteRequest.Cpf))
+                throw new ArgumentException("Cpf informado é inválido.");
+
             var paciente = new Paciente()
             {
                 Nome = pacienteRequest.Nome,
-                Cpf = pacienteRequest.Cpf,
+                Cpf = pacienteRequest.Cpf.GetFormattedCpf(),
                 DataNascimento = pacienteRequest.DataNascimento,
                 Sexo = pacienteRequest.Sexo,
-                Telefone = pacienteRequest.Telefone,
+                Telefone = StringHelpers.FormatTelefoneMovel(pacienteRequest.ddd, pacienteRequest.Telefone),
                 Email = pacienteRequest.Email,
             };
 
@@ -38,9 +43,30 @@ namespace ProjetoFinal.Service
             return await _repositorio.SavePacienteAsync(paciente);
         }
 
+        public async Task<PacienteDto> UpdatePacienteAsync(UpdatePacienteRequest pacienteRequest)
+        {
+            if (!StringHelpers.IsValidCPF(pacienteRequest.Cpf))
+                throw new ArgumentException("Cpf informado é inválido.");
+
+            return await _repositorio.UpdatePaciente(pacienteRequest);
+        }
+
+        public async Task<PaginacaoResult<PacienteResumoResult>> GetPagesPacienteParametroAsync(string parametro, int pageNumber, int pageSize)
+        {
+            if (string.IsNullOrEmpty(parametro))
+                throw new ArgumentNullException("Parametro de pesquisa não pode ser null ou vazio.");
+
+            return await _repositorio.GetPacientesParametroAsync(parametro, pageNumber, pageSize);
+        }
+
         public async Task<Paciente?> GetPacienteAsync(string parametro)
         {
             return await _repositorio.GetPacienteByCondicaoAsync(x => x.Cpf == parametro);
+        }
+
+        public async Task<PacienteDto?> GetPacienteByIdAsync(int id)
+        {
+            return await _repositorio.GetPacienteByIdAsync(id);
         }
 
         public async Task<PaginacaoResult<PacienteResumoResult>> GetPagedPacientesByProfissionalAsync(int profissionalId, int pageNumber, int pageSize)

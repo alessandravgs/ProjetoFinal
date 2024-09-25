@@ -36,7 +36,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> Register([FromBody] CoberturaUpdateRequest cobertura)
+        public async Task<IActionResult> Update([FromBody] CoberturaUpdateRequest cobertura)
         {
             try
             {
