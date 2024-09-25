@@ -2,6 +2,7 @@
 {
     public enum Membro
     {
+        None = 0,
         MembrosSuperiores,
         MembrosInferiores,
         MembroSuperiorEsquerdo,

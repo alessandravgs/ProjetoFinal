@@ -18,7 +18,10 @@ namespace ProjetoFinal.Requests.Lesao
         bool Amputacao,
         bool Desbridamento,
         bool Traumatica,
-        string Detalhes
+        string Detalhes,
+        int Altura,
+        int Largura,
+        int Profundidade
         );
 
 }

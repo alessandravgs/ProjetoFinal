@@ -2,6 +2,7 @@
 {
     public enum Situacao
     {
+        None = 0,
         Granulacao,
         Hiperqueratosa,
         Descamativa,

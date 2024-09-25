@@ -2,6 +2,7 @@
 {
     public enum Regiao
     {
+        None = 0,
         PavilhaoAuditivo,
         RegiaoOcciptal,
         Cotovelo,
