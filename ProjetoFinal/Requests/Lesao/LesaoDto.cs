@@ -21,9 +21,9 @@ namespace ProjetoFinal.Requests.Lesao
         public bool Desbridamento { get; set; }
         public bool Traumatica { get; set; }
         public string Detalhes { get; set; }
-        public int Altura { get; set; }
-        public int Largura { get; set; }
-        public int Profundidade { get; set; }
+        public double Altura { get; set; }
+        public double Largura { get; set; }
+        public double Profundidade { get; set; }
     }
 
     public class PacienteLesaoDto

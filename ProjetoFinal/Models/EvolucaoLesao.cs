@@ -6,9 +6,9 @@ namespace ProjetoFinal.Models
     {
         public int Id { get; set; }
         public DateTime DataAtualizacao { get; set; }
-        public int Altura { get; set; }
-        public int Largura { get; set; }
-        public int Profundidade { get; set; }
+        public double Altura { get; set; }
+        public double Largura { get; set; }
+        public double Profundidade { get; set; }
         public Situacao Situacao { get; set; }
         public virtual Lesao Lesao { get; set; }
         public int? CurativoId { get; set; }

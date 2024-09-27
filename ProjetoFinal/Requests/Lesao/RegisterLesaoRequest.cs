@@ -19,9 +19,9 @@ namespace ProjetoFinal.Requests.Lesao
         bool Desbridamento,
         bool Traumatica,
         string Detalhes,
-        int Altura,
-        int Largura,
-        int Profundidade
+        double Altura,
+        double Largura,
+        double Profundidade
         );
 
 }
