@@ -1,12 +1,11 @@
 ﻿using ProjetoFinal.Models.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace ProjetoFinal.Requests.Lesao
 {
-    public class LesaoDto
+    public class LesaoUpdateRequest
     {
         public int Id { get; set; }
-        public PacienteLesaoDto Paciente{ get; set; }
+        public int PacienteId { get; set; }
         public Membro Membro { get; set; }
         public Regiao Regiao { get; set; }
         public LadoRegiao LadoRegiao { get; set; }
@@ -24,14 +23,5 @@ namespace ProjetoFinal.Requests.Lesao
         public int Altura { get; set; }
         public int Largura { get; set; }
         public int Profundidade { get; set; }
-    }
-
-    public class PacienteLesaoDto
-    {
-        public int Id { get; set; }
-        public string Nome { get; set; }
-        public DateTime DataNascimento { get; set; }
-        public string Cpf { get; set; }
-        public Sexo Sexo { get; set; }
     }
 }

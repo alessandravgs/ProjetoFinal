@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetoFinal.Data;
 
@@ -11,9 +12,11 @@ using ProjetoFinal.Data;
 namespace ProjetoFinal.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240926205942_atualizacao02")]
+    partial class atualizacao02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +185,7 @@ namespace ProjetoFinal.Migrations
                     b.Property<int>("LesaoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProfissionalId")
+                    b.Property<int>("ProfissionalId")
                         .HasColumnType("int");
 
                     b.Property<int>("Profundidade")
@@ -433,7 +436,9 @@ namespace ProjetoFinal.Migrations
 
                     b.HasOne("ProjetoFinal.Models.Profissional", "Profissional")
                         .WithMany()
-                        .HasForeignKey("ProfissionalId");
+                        .HasForeignKey("ProfissionalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Curativo");
 

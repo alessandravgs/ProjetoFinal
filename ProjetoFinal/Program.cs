@@ -18,6 +18,8 @@ builder.Services.AddScoped<ICurativoService, CurativoService>();
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 builder.Services.AddScoped<IRepositorioCobertura, RepositorioCobertura>();
 builder.Services.AddScoped<ICoberturaService, CoberturaService>();
+builder.Services.AddScoped<ILesaoService, LesaoService>();
+builder.Services.AddScoped<IRepositorioLesao, RepositorioLesao>();
 
 // Captura a configuração JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");

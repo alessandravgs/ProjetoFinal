@@ -1,6 +1,9 @@
-﻿using ProjetoFinal.Interfaces;
+﻿using ProjetoFinal.Helpers;
+using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
+using ProjetoFinal.Requests;
 using ProjetoFinal.Requests.Lesao;
+using ProjetoFinal.Requests.Paciente;
 
 namespace ProjetoFinal.Service
 {
@@ -17,7 +20,7 @@ namespace ProjetoFinal.Service
             _repositorioPaciente = repositorioPaciente;
         }
 
-        public async Task RegistrarLesaoAsync(RegisterLesaoRequest lesaoRequest)
+        public async Task<LesaoDto> RegistrarLesaoAsync(RegisterLesaoRequest lesaoRequest)
         {
             var paciente = await _repositorioPaciente.GetPacienteByCondicaoAsync(x => x.Id == lesaoRequest.PacienteId);
 
@@ -43,10 +46,50 @@ namespace ProjetoFinal.Service
                 UlceraVenosa = lesaoRequest.TipoUlcera
             };
 
-            var salvou = await _repositorio.SaveLesaoAsync(lesao);
+            var evolucao = new EvolucaoLesao()
+            {
+                Altura = lesaoRequest.Altura,
+                Largura = lesaoRequest.Largura,
+                Profundidade = lesaoRequest.Profundidade,
+                Situacao = lesaoRequest.Situacao,
+                Lesao = lesao,
+                CurativoId = null,
+                DataAtualizacao = DateTimeHelpers.ObterHoraBrasilia(),
+            };
 
-            if (!salvou)
-                throw new BadHttpRequestException("Erro ao Salvar Lesão.");
+            return await _repositorio.SaveLesaoAsync(lesao, evolucao);
+        }
+
+        public async Task<LesaoDto> UpdateLesaoAsync(LesaoUpdateRequest lesaoRequest)
+        {
+            var paciente = await _repositorioPaciente.GetPacienteByCondicaoAsync(x => x.Id == lesaoRequest.PacienteId);
+            if (paciente == null)
+                throw new FileNotFoundException("Paciente não encontrado.");
+
+            return await _repositorio.UpdateLesao(lesaoRequest);
+        }
+
+        public async Task<LesaoDto?> GetLesaoByIdAsync(int id)
+        {
+            return await _repositorio.GetLesaoByIdAsync(id);
+        }
+
+        public async Task<PaginacaoResult<LesaoResumoResult>> GetPagedLesoesByProfissionalAsync(int profissionalId, int pageNumber, int pageSize)
+        {
+            return await _repositorio.GetLesoesByProfissional(profissionalId, pageNumber, pageSize);
+        }
+
+        public async Task<PaginacaoResult<LesaoResumoResult>> GetPagesLesaoParametroAsync(string parametro, int pageNumber, int pageSize)
+        {
+            if (string.IsNullOrEmpty(parametro))
+                throw new ArgumentNullException("Parametro de pesquisa não pode ser null ou vazio.");
+
+            return await _repositorio.GetLesoesParametroPacienteAsync(parametro, pageNumber, pageSize);
+        }
+
+        public async Task<PaginacaoResult<LesaoResumoResult>> GetPagesLesaoByPacienteAsync(int idPaciente, int pageNumber, int pageSize)
+        {
+            return await _repositorio.GetLesoesByPacienteAsync(idPaciente, pageNumber, pageSize);
         }
     }
 }
