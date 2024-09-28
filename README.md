@@ -1,10 +1,14 @@
 # Api dedicada ao Projeto final da Pós Graduação 
 # Sistema Curativo Vital
 
-# API de Cobertura e Curativo
-
 Esta documentação descreve as funcionalidades da API responsável por gerir o sistema Curativo Vital.
 O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
+
+## Informações de Contato
+
+- **Nome:** Alessandra Gonçalves
+- **Email:** alessandravgs0@gmail.com
+- **GitHub:** [GitHub](https://github.com/alessandravgs)
 
 ## Enpoints de Cobertura
 
