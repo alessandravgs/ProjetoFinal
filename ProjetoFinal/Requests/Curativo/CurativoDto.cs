@@ -13,6 +13,7 @@ namespace ProjetoFinal.Requests.Curativo
         public string Orientacoes { get; set; }
         public string Detalhes { get; set; }
         public DateTime Data { get; set; }
+        public List<string> Fotos { get; set; }
     }
 
     public class PacienteCurativoDto

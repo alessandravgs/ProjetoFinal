@@ -2,9 +2,8 @@
 {
     public class ImagemCurativo
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public virtual Curativo Curativo { get; set; }
-
-        //Imagem
+        public byte[] Foto { get; set; }
     }
 }

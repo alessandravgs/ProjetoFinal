@@ -13,7 +13,7 @@ using System.Linq.Expressions;
 
 namespace ProjetoFinal.Repositorios
 {
-    public class RepositorioCurativo: IRepositorioCurativo
+    public class RepositorioCurativo : IRepositorioCurativo
     {
         private readonly ApiDbContext _context;
         private readonly IRepositorioCobertura _repositorioCobertura;
@@ -100,9 +100,20 @@ namespace ProjetoFinal.Repositorios
                     Largura = curativo.EvolucaoLesao.Largura,
                 }, 
                 Coberturas = curativo.Coberturas.Select(x => new CoberturaResumoResult() { Id = x.Id, Nome = x.Nome, Descricao = x.Descricao}).ToList(),
+                Fotos = (curativo.Imagens ?? new List<ImagemCurativo>()).Select(x => ConvertByteArrayToBase64(x.Foto)).ToList()
             };
             
             return dto;
+        }
+
+        public string ConvertByteArrayToBase64(byte[] byteArray)
+        {
+            if (byteArray == null || byteArray.Length == 0)
+            {
+                return string.Empty; 
+            }
+
+            return Convert.ToBase64String(byteArray);
         }
 
         public async Task<PaginacaoResult<CurativoResumoResult>> GetCurativosByProfissional(int idProfissional, int pageNumber, int pageSize)
@@ -187,6 +198,8 @@ namespace ProjetoFinal.Repositorios
 
                 await AtualizarCoberturas(curativo, curativoExistente);
 
+                PrepararImagensCurativo(curativoExistente, curativo);
+
                 await _context.SaveChangesAsync();
 
                 return curativo.Id;
@@ -217,6 +230,42 @@ namespace ProjetoFinal.Repositorios
                 foreach (var inserirCobertura in coberturasAddBase)
                 {
                     curativoExistente.Coberturas.Add(inserirCobertura);
+                }
+            }
+        }
+
+        public List<byte[]> PegarListaBytesFotos(UpdateCurativoRequest curativo)
+        {
+            List<byte[]> fotosBytes = new List<byte[]>();
+
+            if (curativo.Fotos != null && curativo.Fotos.Count != 0)
+            {
+                foreach (var fotoBase64 in curativo.Fotos)
+                {
+                    // Remove o prefixo 'data:image/...;base64,' se existir
+                    var base64Data = fotoBase64.Split(',')[1];
+                    fotosBytes.Add(Convert.FromBase64String(base64Data));
+                }
+            }
+
+            return fotosBytes;
+        }
+
+        public void PrepararImagensCurativo(Curativo curativo, UpdateCurativoRequest curativoRequest)
+        {
+            var fotos = PegarListaBytesFotos(curativoRequest);
+
+            if (fotos.Count > 0)
+            {
+                foreach (var fotoSalvar in fotos)
+                {
+                    var imagemCurativoNew = new ImagemCurativo()
+                    {
+                        Curativo = curativo,
+                        Foto = fotoSalvar,
+                    };
+
+                    curativo.Imagens.Add(imagemCurativoNew);
                 }
             }
         }

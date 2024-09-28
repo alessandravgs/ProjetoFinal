@@ -12,6 +12,7 @@ namespace ProjetoFinal.Requests.Curativo
        [Required] double Altura,
        [Required] double Largura,
        [Required] double Profundidade,
-       [Required] Situacao SituacaoLesao
+       [Required] Situacao SituacaoLesao,
+       List<string> Fotos
     );
 }

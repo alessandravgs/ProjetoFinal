@@ -18,13 +18,13 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("total/paciente")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetRelatorioCurativosTotaisPaciente(int idPaciente)
         {
             try
             {
-                await _service.RelatorioCurativosTotalPacienteAsync(idPaciente);
-                return Ok();
+                var retorno = await _service.RelatorioCurativosTotalPacienteAsync(idPaciente);
+                return Ok(retorno);
             }
             catch (FileNotFoundException ex)
             {

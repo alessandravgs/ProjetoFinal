@@ -60,7 +60,49 @@ namespace ProjetoFinal.Service
 
             lesao.Situacao = curativo.SituacaoLesao;
 
+         
+            PrepararImagensCurativo(novoCurativo, curativo);
+
             return await _repositorio.SaveCurativoAsync(novoCurativo, novaEvolucao);
+        }
+
+        public List<byte[]> PegarListaBytesFotos(RegisterCurativoRequest curativo)
+        {
+            List<byte[]> fotosBytes = new List<byte[]>();
+
+            if (curativo.Fotos != null && curativo.Fotos.Count != 0)
+            {
+                foreach (var fotoBase64 in curativo.Fotos)
+                {
+                    // Remove o prefixo 'data:image/...;base64,' se existir
+                    var base64Data = fotoBase64.Split(',')[1];
+                    fotosBytes.Add(Convert.FromBase64String(base64Data));
+                }
+            }
+
+            return fotosBytes;
+        }
+
+        public void PrepararImagensCurativo(Curativo curativo, RegisterCurativoRequest curativoRequest)
+        {
+            var fotos = PegarListaBytesFotos(curativoRequest);
+
+            if (fotos.Count > 0)
+            {
+                var imagensCurativo = new List<ImagemCurativo>();
+                foreach (var fotoSalvar in fotos)
+                {
+                    var imagemCurativoNew = new ImagemCurativo()
+                    {
+                        Curativo = curativo,
+                        Foto = fotoSalvar,
+                    };
+
+                    imagensCurativo.Add(imagemCurativoNew);
+                }
+
+                curativo.Imagens = imagensCurativo;
+            }
         }
 
         public async Task<int> UpdateCurativoAsync(UpdateCurativoRequest curativoRequest)
