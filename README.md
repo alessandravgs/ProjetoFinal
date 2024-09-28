@@ -12,6 +12,20 @@ O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
 - **Email:** alessandravgs0@gmail.com
 - **GitHub:** [GitHub](https://github.com/alessandravgs)
 
+## Como executar o projeto
+
+- Baixar o código
+- Abrir no visual studio
+- Clicar em executar
+
+## Tecnologias usadas
+
+- C#
+- Asp Net Core
+- Entity Framework
+- Banco de dados Sql Server
+
+
 ## Enpoints de Cobertura
 
 ### 1. Registrar Cobertura
