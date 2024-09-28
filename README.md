@@ -23,6 +23,7 @@ O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
 - C#
 - Asp Net Core
 - Entity Framework
+- JWT
 - Banco de dados Sql Server
 
 
