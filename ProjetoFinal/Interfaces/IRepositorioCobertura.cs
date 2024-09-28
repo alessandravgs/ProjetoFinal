@@ -10,5 +10,6 @@ namespace ProjetoFinal.Interfaces
         Task<PaginacaoResult<CoberturaResumoResult>> GetCoberturasAsync(int pageNumber, int pageSize);
         Task<PaginacaoResult<CoberturaResumoResult>> GetCoberturasParametroAsync(string parametro, int pageNumber, int pageSize);
         Task<CoberturaResumoResult> UpdateCobertura(CoberturaUpdateRequest cobertura);
+        Task<List<Cobertura>> GetCoberturasByListIdAsync(List<int> coberturasIds);
     }
 }

@@ -257,5 +257,13 @@ namespace ProjetoFinal.Repositorios
                 PageSize = pageSize
             };
         }
+
+        public async Task<Lesao?> GetLesaoFromPaciente(int pacienteID, int lesaoId)
+        {
+            var lesaoPaciente = await _context.Lesoes
+                .FirstOrDefaultAsync(x => x.Paciente.Id == pacienteID && x.Id == lesaoId);
+
+            return lesaoPaciente;
+        }
     }
 }

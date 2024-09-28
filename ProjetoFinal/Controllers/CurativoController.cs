@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
 using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Curativo;
+using ProjetoFinal.Requests.Lesao;
 using ProjetoFinal.Service;
 using System.Security.Claims;
 
@@ -20,12 +22,12 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Curativo curativo)
+        public async Task<IActionResult> Register([FromBody] RegisterCurativoRequest curativo)
         {
             try
             {
-                await _service.RegistrarCurativoAsync(curativo);
-                return Ok();
+                var id = await _service.RegistrarCurativoAsync(curativo);
+                return Ok(id);
             }
             catch (BadHttpRequestException ex)
             {
@@ -37,21 +39,35 @@ namespace ProjetoFinal.Controllers
             }
         }
 
-        [HttpGet("buscar")]
-        [Authorize]
-        public async Task<IActionResult> GetCurativo(int parametro)
+        [HttpPost("update")]
+        //[Authorize]
+        public async Task<IActionResult> Update([FromBody] UpdateCurativoRequest curativoUpdate)
         {
-            if (parametro == null || parametro < 0)
+            try
+            {
+                var curativoAtualizado = await _service.UpdateCurativoAsync(curativoUpdate);
+                return Ok(curativoAtualizado);
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("id")]
+        //[Authorize]
+        public async Task<IActionResult> GetCurativoById(int? parametro)
+        {
+            if (parametro == null || parametro.Value == 0)
             {
                 return Unauthorized("Parâmetro inválido.");
             }
 
-            var curativo = await _service.GetCurativoAsync(parametro);
-
-            if (curativo == null)
-            {
-                return NotFound("Nenhum curativo encontrado com os dados solicitados.");
-            }
+            var curativo = await _service.GetCurativoById(parametro.Value);
 
             return Ok(curativo);
         }
@@ -80,28 +96,45 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("paginado")]
-        [Authorize]
-        public async Task<IActionResult> GetPagedPacientesByProfissional([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        //[Authorize]
+        public async Task<IActionResult> GetPagedCurativoByProfissional([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+                //var userId = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
-                {
-                    return Unauthorized("ID do profissional não encontrado no token.");
-                }
+                //if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                //{
+                //    return Unauthorized("ID do profissional não encontrado no token.");
+                //}
 
-                var pagedResult = await _service.GetPagesCurativosByProfissionalAsync(profissionalId, pageNumber, pageSize);
-                
-                return Ok(pagedResult);
+                var curativos = await _service.GetPagedCurativosByProfissionalAsync(0, pageNumber, pageSize);
+                return Ok(curativos);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }           
+
+            }
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> GetCurativoSearch([FromQuery] string parametro, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var curativos = await _service.GetPagesCurativosParametroAsync(parametro, pageNumber, pageSize);
+                return Ok(curativos);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         
     }
 }

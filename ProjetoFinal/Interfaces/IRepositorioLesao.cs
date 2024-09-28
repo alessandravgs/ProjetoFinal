@@ -12,5 +12,6 @@ namespace ProjetoFinal.Interfaces
         Task<PaginacaoResult<LesaoResumoResult>> GetLesoesByProfissional(int idProfissional, int pageNumber, int pageSize);
         Task<PaginacaoResult<LesaoResumoResult>> GetLesoesParametroPacienteAsync(string parametro, int pageNumber, int pageSize);
         Task<PaginacaoResult<LesaoResumoResult>> GetLesoesByPacienteAsync(int idPaciente, int pageNumber, int pageSize);
+        Task<Lesao?> GetLesaoFromPaciente(int pacienteID, int lesaoId);
     }
 }

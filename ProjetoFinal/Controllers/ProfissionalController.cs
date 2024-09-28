@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using ProjetoFinal.Data;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
+using ProjetoFinal.Requests.Coberturas;
+using ProjetoFinal.Requests.Profissional;
 using ProjetoFinal.Service;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -24,12 +26,12 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Profissional profissional)
+        public async Task<IActionResult> Register([FromBody] RegisterProfissionalRequest profissional)
         {
             try
             {
                 await _service.RegistrarProfissionalAsync(profissional);
-                return Ok();
+                return Ok(true);
             }
             catch (BadHttpRequestException ex)
             {
@@ -107,11 +109,59 @@ namespace ProjetoFinal.Controllers
 
             return Ok(curativos);
         }
-    }
 
-    public class LoginModel
-    {
-        public string Email { get; set; }
-        public string Senha { get; set; }
+        [HttpGet("dados")]
+        [Authorize]
+        public async Task<IActionResult> GetDadosProfissional()
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                {
+                    return Unauthorized("ID do profissional não encontrado no token.");
+                }
+
+                var profisional = await _service.GetProfissionalById(profissionalId);
+
+                return Ok(profisional);
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }        
+        }
+
+        [HttpPost("update")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromBody] ProfissionalDto profissional)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                {
+                    return Unauthorized("ID do profissional não encontrado no token.");
+                }
+
+                var profissionalSalvo = await _service.UpdateProfissionalAsync(profissional, profissionalId);
+                return Ok(profissionalSalvo);
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

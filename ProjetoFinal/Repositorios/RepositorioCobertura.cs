@@ -109,5 +109,12 @@ namespace ProjetoFinal.Repositorios
                 PageSize = pageSize
             };
         }
+
+        public async Task<List<Cobertura>> GetCoberturasByListIdAsync(List<int> coberturasIds)
+        {
+            return await _context.Coberturas
+                .Where(a => coberturasIds.Contains(a.Id))
+                .ToListAsync();
+        }
     }
 }

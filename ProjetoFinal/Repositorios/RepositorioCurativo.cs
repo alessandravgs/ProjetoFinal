@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjetoFinal.Data;
+using ProjetoFinal.Helpers;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Models;
 using ProjetoFinal.Requests;
+using ProjetoFinal.Requests.Coberturas;
 using ProjetoFinal.Requests.Curativo;
+using ProjetoFinal.Requests.Lesao;
+using ProjetoFinal.Requests.Paciente;
 using ProjetoFinal.Requests.Relatorios;
 using System.Linq.Expressions;
 
@@ -12,9 +16,11 @@ namespace ProjetoFinal.Repositorios
     public class RepositorioCurativo: IRepositorioCurativo
     {
         private readonly ApiDbContext _context;
-        public RepositorioCurativo(ApiDbContext context)
+        private readonly IRepositorioCobertura _repositorioCobertura;
+        public RepositorioCurativo(ApiDbContext context, IRepositorioCobertura repositorioCobertura)
         {
             _context = context;
+            _repositorioCobertura = repositorioCobertura;
         }
 
         public async Task<Curativo?> GetCurativoByCondicaoAsync(Expression<Func<Curativo, bool>> condicao)
@@ -27,19 +33,194 @@ namespace ProjetoFinal.Repositorios
             return await _context.Curativos.Where(condicao).ToListAsync();
         }
 
-        public async Task<bool> SaveCurativoAsync(Curativo curativo)
+        public async Task<int> SaveCurativoAsync(Curativo curativo, EvolucaoLesao evolucaoLesao)
         {
             try
             {
+                _context.EvolucaoLesao.Add(evolucaoLesao);
                 _context.Curativos.Add(curativo);
                 await _context.SaveChangesAsync();
-                return true;
+                return curativo.Id;
             }
             catch (Exception)
             {
-                return false;
+                throw new BadHttpRequestException("Erro ao salvar curativo.");
             }
         }
+
+        public async Task<CurativoDto?> GetCurativoByIdAsync(int id)
+        {
+            var curativo = await _context.Curativos.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (curativo == null)
+                return null;
+
+            return GetCurativoDto(curativo);
+        }
+
+        public CurativoDto GetCurativoDto(Curativo curativo)
+        {
+            var dto = new CurativoDto()
+            {
+                Id = curativo.Id,
+                Data = curativo.Data,
+                Detalhes = curativo.Observacoes,
+                Orientacoes = curativo.Orientacoes,
+                Paciente = new PacienteCurativoDto()
+                {
+                    Id = curativo.Lesao.Paciente.Id,
+                    Nome = curativo.Lesao.Paciente.Nome,
+                    Cpf = curativo.Lesao.Paciente.Cpf,
+                    DataNascimento = curativo.Lesao.Paciente.DataNascimento,
+                    Sexo = curativo.Lesao.Paciente.Sexo,
+                    Telefone = curativo.Lesao.Paciente.Telefone,
+                },
+                Lesao = new LesaoCurativoDto()
+                {
+                    Id = curativo.Lesao.Id,
+                    Detalhes = curativo.Lesao.Detalhes,
+                    Situacao = curativo.Lesao.Situacao,
+                    Amputacao = curativo.Lesao.Amputacao,
+                    Cirurgica = curativo.Lesao.Cirurgica,
+                    DeiscenciaCirurgica = curativo.Lesao.DeiscenciaCirurgica,
+                    Desbridamento = curativo.Lesao.Desbridamento,
+                    Hanseniase = curativo.Lesao.Hanseniase,
+                    Infectada = curativo.Lesao.Infectada,
+                    LadoRegiao = curativo.Lesao.LadoRegiao,
+                    Membro = curativo.Lesao.Membro,
+                    Miiase = curativo.Lesao.Miiase, 
+                    Regiao = curativo.Lesao.Regiao,
+                    TipoUlcera = curativo.Lesao.UlceraVenosa,
+                    Traumatica = curativo.Lesao.Traumatica,                    
+                },
+                Evolucao = new EvolucaoLesaoCurativoDto()
+                { 
+                    Altura = curativo.EvolucaoLesao.Altura,
+                    Profundidade = curativo.EvolucaoLesao.Profundidade,
+                    Largura = curativo.EvolucaoLesao.Largura,
+                }, 
+                Coberturas = curativo.Coberturas.Select(x => new CoberturaResumoResult() { Id = x.Id, Nome = x.Nome, Descricao = x.Descricao}).ToList(),
+            };
+            
+            return dto;
+        }
+
+        public async Task<PaginacaoResult<CurativoResumoResult>> GetCurativosByProfissional(int idProfissional, int pageNumber, int pageSize)
+        {
+            //var query = _context.Curativos.Where(x => x.Profissional.Id == idProfissional).Select(x => x.Lesao.Paciente).Distinct();
+            var query = _context.Curativos.OrderBy(x => x.Data);
+            var totalItems = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new CurativoResumoResult()
+                {
+                    Id = x.Id,
+                    Paciente = x.Lesao.Paciente.Nome,
+                    Lesao = x.Lesao.Detalhes,
+                    Data = x.Data,
+                })
+                .ToListAsync();
+
+            return RetornarPaginacao(totalItems, items, pageNumber, pageSize);
+        }
+
+        public async Task<PaginacaoResult<CurativoResumoResult>> GetCurativosParametroPacienteAsync(string parametro, int pageNumber, int pageSize)
+        {
+            var query = _context.Curativos.AsQueryable();
+
+            if (StringHelpers.IsValidCPF(parametro))
+            {
+                parametro = parametro.GetFormattedCpf();
+                query = query.Where(x => x.Lesao.Paciente.Cpf == parametro).OrderBy(x => x.Data);
+            }
+            else
+            {
+                parametro = parametro.ToLower();
+                query = query.Where(x => x.Lesao.Paciente.Nome.ToLower().Contains(parametro)).OrderBy(x => x.Data);
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new CurativoResumoResult()
+                {
+                    Id = x.Id,
+                    Paciente = x.Lesao.Paciente.Nome,
+                    Lesao = x.Lesao.Detalhes,
+                    Data = x.Data,
+                })
+                .ToListAsync();
+
+            return RetornarPaginacao(totalItems, items, pageNumber, pageSize);
+        }
+
+        public PaginacaoResult<CurativoResumoResult> RetornarPaginacao(int totalItems, List<CurativoResumoResult> curativos, int pageNumber, int pageSize)
+        {
+            return new PaginacaoResult<CurativoResumoResult>()
+            {
+                TotalItems = totalItems,
+                Items = curativos,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<int> UpdateCurativo(UpdateCurativoRequest curativo)
+        {
+            try
+            {
+                var curativoExistente = await _context.Curativos
+                    .Include(p => p.Coberturas)
+                    .FirstOrDefaultAsync(p => p.Id == curativo.Id)
+                    ?? throw new KeyNotFoundException("Curativo não encontrado.");
+
+                curativoExistente.EvolucaoLesao.Altura = curativo.Altura;
+                curativoExistente.EvolucaoLesao.Profundidade = curativo.Profundidade;
+                curativoExistente.EvolucaoLesao.Largura = curativo.Largura;
+                curativoExistente.EvolucaoLesao.Situacao = curativo.SituacaoLesao;
+                curativoExistente.Observacoes = curativo.Observacoes;
+                curativoExistente.Orientacoes = curativo.Orientacoes;
+
+
+                await AtualizarCoberturas(curativo, curativoExistente);
+
+                await _context.SaveChangesAsync();
+
+                return curativo.Id;
+            }
+            catch (Exception ex)
+            {
+                throw new BadHttpRequestException("Erro ao atualizar curativo: " + ex.Message);
+            }
+        }
+
+        public async Task AtualizarCoberturas(UpdateCurativoRequest curativo, Curativo curativoExistente)
+        {
+            List<int> coberturasBase = curativoExistente.Coberturas.Select(x => x.Id).ToList();
+            var coberturasToDelete = coberturasBase.Except(curativo.CoberturasIds).ToList();
+            var coberturasToAdd = curativo.CoberturasIds.Except(coberturasBase).ToList();
+
+            foreach (var deleteCobertura in coberturasToDelete)
+            {
+                var apagar = curativoExistente.Coberturas.FirstOrDefault(x => x.Id == deleteCobertura);
+                if (apagar == null) continue;
+
+                curativoExistente.Coberturas.Remove(apagar);
+            }
+
+            if (coberturasToAdd != null && coberturasToAdd.Any())
+            {
+                var coberturasAddBase = await _repositorioCobertura.GetCoberturasByListIdAsync(coberturasToAdd);
+                foreach (var inserirCobertura in coberturasAddBase)
+                {
+                    curativoExistente.Coberturas.Add(inserirCobertura);
+                }
+            }
+        }
+
 
         public async Task<IEnumerable<CurativoResumoResult>> GetUltimosCurativos(int idProfissional)
         {
