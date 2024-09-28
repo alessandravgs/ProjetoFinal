@@ -4,7 +4,8 @@ Esta documentação descreve as funcionalidades da API responsável por gerir o 
 O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
 
 - A api tem como objetivo ser apresentada como projeto final de pós graduação.
-- Front-end: [https://github.com/alessandravgs/ProjetoFinal](https://github.com/alessandravgs/curativos-vue)
+- Front-end: https://github.com/alessandravgs/curativos-vue
+- Back-End: https://github.com/alessandravgs/ProjetoFinal
 
 ## Informações de Contato
 
