@@ -15,19 +15,22 @@ namespace ProjetoFinal.Service
         private readonly IRepositorioPaciente _repositorioPaciente;
         private readonly IRepositorioLesao _repositorioLesao;
         private readonly IRepositorioCobertura _repositorioCobertura;
+        private readonly IRepositorioProfissional _repositorioProfissional;
         private readonly IConfiguration _configuration;
 
         public CurativoService(IRepositorioCurativo repositorioCurativo, IRepositorioPaciente repositorioPaciente,
-            IRepositorioLesao repositorioLesao, IRepositorioCobertura repositorioCobertura, IConfiguration configuration)
+            IRepositorioLesao repositorioLesao, IRepositorioCobertura repositorioCobertura, IRepositorioProfissional repositorioProfissional, 
+            IConfiguration configuration)
         {
             _repositorio = repositorioCurativo;
             _configuration = configuration;
             _repositorioPaciente = repositorioPaciente;
             _repositorioLesao = repositorioLesao;
             _repositorioCobertura = repositorioCobertura;
+            _repositorioProfissional = repositorioProfissional;
         }
 
-        public async Task<int> RegistrarCurativoAsync(RegisterCurativoRequest curativo)
+        public async Task<int> RegistrarCurativoAsync(RegisterCurativoRequest curativo, int idProfissional)
         {
             var paciente = await _repositorioPaciente.GetPacienteByCondicaoAsync(x => x.Id == curativo.PacienteId)
                 ?? throw new ArgumentException("Não foi encontrado o paciente informado.");
@@ -38,6 +41,9 @@ namespace ProjetoFinal.Service
             if (curativo.CoberturasIds.Count == 0)
                 throw new ArgumentException("É necessário selecionar ao menos uma cobertura para o curativo.");
 
+            var profissional = await _repositorioProfissional.GetProfissionalBaseByIdAsync(idProfissional)
+                ?? throw new ArgumentException("Não foi encontrado o profissional requerente.");
+
             var novaEvolucao = new EvolucaoLesao()
             {
                 Altura = curativo.Altura,
@@ -46,6 +52,7 @@ namespace ProjetoFinal.Service
                 Situacao = curativo.SituacaoLesao,
                 DataAtualizacao = DateTimeHelpers.ObterHoraBrasilia(),
                 Lesao = lesao,
+                Profissional = profissional,
             };
 
             var novoCurativo = new Curativo()
@@ -55,11 +62,11 @@ namespace ProjetoFinal.Service
                 Observacoes = curativo.Observacoes,
                 Orientacoes = curativo.Orientacoes,
                 Data = DateTimeHelpers.ObterHoraBrasilia(),
+                Profissional = profissional,
                 Coberturas = await _repositorioCobertura.GetCoberturasByListIdAsync(curativo.CoberturasIds)
             };
 
             lesao.Situacao = curativo.SituacaoLesao;
-
          
             PrepararImagensCurativo(novoCurativo, curativo);
 
@@ -105,7 +112,7 @@ namespace ProjetoFinal.Service
             }
         }
 
-        public async Task<int> UpdateCurativoAsync(UpdateCurativoRequest curativoRequest)
+        public async Task<int> UpdateCurativoAsync(UpdateCurativoRequest curativoRequest, int idProfissional)
         {
             var paciente = await _repositorioPaciente.GetPacienteByCondicaoAsync(x => x.Id == curativoRequest.PacienteId)
                 ?? throw new ArgumentException("Não foi encontrado o paciente informado.");
@@ -116,7 +123,7 @@ namespace ProjetoFinal.Service
             if (curativoRequest.CoberturasIds.Count == 0)
                 throw new ArgumentException("É necessário selecionar ao menos uma cobertura para o curativo.");
 
-            return await _repositorio.UpdateCurativo(curativoRequest);
+            return await _repositorio.UpdateCurativo(curativoRequest, idProfissional);
         }
 
         public async Task<CurativoDto?> GetCurativoById(int id)

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Requests;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace ProjetoFinal.Controllers
 {
@@ -24,7 +26,13 @@ namespace ProjetoFinal.Controllers
             try
             {
                 var retorno = await _service.RelatorioCurativosTotalPacienteAsync(idPaciente);
-                return Ok(retorno);
+                var options = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.Preserve,
+                    WriteIndented = true
+                };
+                var json = JsonSerializer.Serialize(retorno, options);
+                return Ok(json);
             }
             catch (FileNotFoundException ex)
             {

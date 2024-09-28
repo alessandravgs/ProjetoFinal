@@ -12,7 +12,7 @@ namespace ProjetoFinal.Interfaces
         Task<CurativoDto?> GetCurativoByIdAsync(int id);
         Task<IEnumerable<Curativo>> GetListagemCurativosByCondicaoAsync(Expression<Func<Curativo, bool>> condicao);
         Task<int> SaveCurativoAsync(Curativo curativo, EvolucaoLesao evolucaoLesao);
-        Task<int> UpdateCurativo(UpdateCurativoRequest curativo);
+        Task<int> UpdateCurativo(UpdateCurativoRequest curativo, int idProfissional);
         Task<PaginacaoResult<CurativoResumoResult>> GetCurativosParametroPacienteAsync(string parametro, int pageNumber, int pageSize);
         Task<PaginacaoResult<CurativoResumoResult>> GetCurativosByProfissional(int idProfissional, int pageNumber, int pageSize);
         Task<IEnumerable<CurativoResumoResult>> GetUltimosCurativos(int idProfissional);

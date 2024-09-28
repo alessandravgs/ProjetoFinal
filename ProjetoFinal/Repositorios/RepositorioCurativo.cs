@@ -6,8 +6,6 @@ using ProjetoFinal.Models;
 using ProjetoFinal.Requests;
 using ProjetoFinal.Requests.Coberturas;
 using ProjetoFinal.Requests.Curativo;
-using ProjetoFinal.Requests.Lesao;
-using ProjetoFinal.Requests.Paciente;
 using ProjetoFinal.Requests.Relatorios;
 using System.Linq.Expressions;
 
@@ -118,8 +116,7 @@ namespace ProjetoFinal.Repositorios
 
         public async Task<PaginacaoResult<CurativoResumoResult>> GetCurativosByProfissional(int idProfissional, int pageNumber, int pageSize)
         {
-            //var query = _context.Curativos.Where(x => x.Profissional.Id == idProfissional).Select(x => x.Lesao.Paciente).Distinct();
-            var query = _context.Curativos.OrderBy(x => x.Data);
+            var query = _context.Curativos.Where(x => x.Profissional != null && x.Profissional.Id == idProfissional);
             var totalItems = await query.CountAsync();
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)
@@ -179,7 +176,7 @@ namespace ProjetoFinal.Repositorios
             };
         }
 
-        public async Task<int> UpdateCurativo(UpdateCurativoRequest curativo)
+        public async Task<int> UpdateCurativo(UpdateCurativoRequest curativo, int idProfissional)
         {
             try
             {
@@ -187,6 +184,9 @@ namespace ProjetoFinal.Repositorios
                     .Include(p => p.Coberturas)
                     .FirstOrDefaultAsync(p => p.Id == curativo.Id)
                     ?? throw new KeyNotFoundException("Curativo não encontrado.");
+
+                if(idProfissional != curativoExistente.Profissional?.Id)
+                    throw new KeyNotFoundException("Não é possível editar curativo de outro paciente.");
 
                 curativoExistente.EvolucaoLesao.Altura = curativo.Altura;
                 curativoExistente.EvolucaoLesao.Profundidade = curativo.Profundidade;
@@ -273,7 +273,7 @@ namespace ProjetoFinal.Repositorios
 
         public async Task<IEnumerable<CurativoResumoResult>> GetUltimosCurativos(int idProfissional)
         {
-            return await _context.Curativos.Where(x => x.Profissional.Id == idProfissional)
+            return await _context.Curativos.Where(x => x.Profissional != null && x.Profissional.Id == idProfissional)
                 .OrderByDescending(x => x.Data)
                 .Take(5)
                 .Select(x => new CurativoResumoResult
@@ -288,7 +288,7 @@ namespace ProjetoFinal.Repositorios
 
         public async Task<PaginacaoResult<CurativoResumoResult>> GetCurativosByProfissionalAsync(int idProfissional, int pageNumber, int pageSize)
         {
-            var query = _context.Curativos.Where(x => x.Profissional.Id == idProfissional).OrderByDescending(x => x.Data);
+            var query = _context.Curativos.Where(x => x.Profissional != null && x.Profissional.Id == idProfissional).OrderByDescending(x => x.Data);
             var totalItems = await query.CountAsync();
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)
@@ -345,7 +345,7 @@ namespace ProjetoFinal.Repositorios
 
         public async Task<IEnumerable<ProfissionalCurativoRelatorio>> GetRelatorioCurativosPorPeriodoProfissionalAsync(int idProfissional, DateTime dataInicial, DateTime dataFinal)
         {
-            return await _context.Curativos.Where(x => x.Profissional.Id == idProfissional && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataInicial.Date)
+            return await _context.Curativos.Where(x => x.Profissional != null && x.Profissional.Id == idProfissional && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataInicial.Date)
                 .GroupBy(x => new { x.Profissional.Nome, x.Profissional.Cpf, x.Profissional.Email })
                 .Select(x => new ProfissionalCurativoRelatorio
                 {

@@ -22,11 +22,19 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
+        [Authorize]
         public async Task<IActionResult> Register([FromBody] RegisterCurativoRequest curativo)
         {
             try
             {
-                var id = await _service.RegistrarCurativoAsync(curativo);
+                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                {
+                    return Unauthorized("ID do profissional não encontrado no token.");
+                }
+
+                var id = await _service.RegistrarCurativoAsync(curativo, profissionalId);
                 return Ok(id);
             }
             catch (BadHttpRequestException ex)
@@ -40,12 +48,19 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("update")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] UpdateCurativoRequest curativoUpdate)
         {
             try
             {
-                var curativoAtualizado = await _service.UpdateCurativoAsync(curativoUpdate);
+                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                {
+                    return Unauthorized("ID do profissional não encontrado no token.");
+                }
+
+                var curativoAtualizado = await _service.UpdateCurativoAsync(curativoUpdate, profissionalId);
                 return Ok(curativoAtualizado);
             }
             catch (BadHttpRequestException ex)
@@ -59,7 +74,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("id")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetCurativoById(int? parametro)
         {
             if (parametro == null || parametro.Value == 0)
@@ -96,19 +111,19 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("paginado")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetPagedCurativoByProfissional([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                //var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                //if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
-                //{
-                //    return Unauthorized("ID do profissional não encontrado no token.");
-                //}
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                {
+                    return Unauthorized("ID do profissional não encontrado no token.");
+                }
 
-                var curativos = await _service.GetPagedCurativosByProfissionalAsync(0, pageNumber, pageSize);
+                var curativos = await _service.GetPagedCurativosByProfissionalAsync(profissionalId, pageNumber, pageSize);
                 return Ok(curativos);
             }
             catch (Exception ex)
@@ -119,6 +134,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("search")]
+        [Authorize]
         public async Task<IActionResult> GetCurativoSearch([FromQuery] string parametro, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try

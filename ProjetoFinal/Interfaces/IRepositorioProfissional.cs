@@ -9,6 +9,8 @@ namespace ProjetoFinal.Interfaces
 
         Task<ProfissionalDto?> GetProfissionalByIdAsync(int id);
 
+        Task<Profissional?> GetProfissionalBaseByIdAsync(int id);
+
         Task<ProfissionalDto> UpdateProfissional(ProfissionalDto profissionalDto, int id);
 
         Task<bool> SaveProfissional(Profissional profissional);

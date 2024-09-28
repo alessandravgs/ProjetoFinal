@@ -56,6 +56,19 @@ namespace ProjetoFinal.Repositorios
             };
         }
 
+        public async Task<Profissional?> GetProfissionalBaseByIdAsync(int id)
+        {
+            var profissional = await _context.Profissionais
+               .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (profissional == null)
+            {
+                return null;
+            }
+
+            return profissional;
+        }
+
         public async Task<ProfissionalDto> UpdateProfissional(ProfissionalDto profissionalDto, int id)
         {
             try

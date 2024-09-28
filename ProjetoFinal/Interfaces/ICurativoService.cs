@@ -6,8 +6,8 @@ namespace ProjetoFinal.Interfaces
 {
     public interface ICurativoService
     {
-        Task <int>RegistrarCurativoAsync(RegisterCurativoRequest curativo);
-        Task<int> UpdateCurativoAsync(UpdateCurativoRequest curativoRequest);
+        Task <int>RegistrarCurativoAsync(RegisterCurativoRequest curativo, int idProfissional);
+        Task<int> UpdateCurativoAsync(UpdateCurativoRequest curativoRequest, int idProfissional);
         Task<CurativoDto?> GetCurativoById(int id);
         Task<PaginacaoResult<CurativoResumoResult>> GetPagesCurativosParametroAsync(string parametro, int pageNumber, int pageSize);
         Task<PaginacaoResult<CurativoResumoResult>> GetPagedCurativosByProfissionalAsync(int profissionalId, int pageNumber, int pageSize);
