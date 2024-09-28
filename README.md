@@ -1,5 +1,4 @@
-# Api dedicada ao Projeto final da Pós Graduação 
-# Sistema Curativo Vital
+# Api dedicada ao Projeto final da Pós Graduação: Sistema Curativo Vital
 
 Esta documentação descreve as funcionalidades da API responsável por gerir o sistema Curativo Vital.
 O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
