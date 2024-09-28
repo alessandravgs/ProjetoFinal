@@ -156,8 +156,8 @@ namespace ProjetoFinal.Repositorios
 
         public async Task<PaginacaoResult<PacienteResumoResult>> GetPacientesByProfissional(int idProfissional, int pageNumber, int pageSize)
         {
-            //var query = _context.Curativos.Where(x => x.Profissional.Id == idProfissional).Select(x => x.Lesao.Paciente).Distinct();
-            var query =  _context.Pacientes.OrderBy(x => x.Nome);
+            var query = _context.Curativos.Where(x => x.Profissional != null && x.Profissional.Id == idProfissional)
+                .Select(x => x.Lesao.Paciente).Distinct();
             var totalItems = await query.CountAsync();
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)

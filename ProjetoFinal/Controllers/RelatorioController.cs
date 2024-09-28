@@ -20,7 +20,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("total/paciente")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetRelatorioCurativosTotaisPaciente(int idPaciente)
         {
             try

@@ -167,8 +167,8 @@ namespace ProjetoFinal.Repositorios
 
         public async Task<PaginacaoResult<LesaoResumoResult>> GetLesoesByProfissional(int idProfissional, int pageNumber, int pageSize)
         {
-            //var query = _context.Curativos.Where(x => x.Profissional.Id == idProfissional).Select(x => x.Lesao.Paciente).Distinct();
-            var query = _context.Lesoes.OrderBy(x => x.Detalhes);
+            var query = _context.Curativos.Where(x => x.Profissional != null &&  x.Profissional.Id == idProfissional)
+                .Select(x => x.Lesao).Distinct();
             var totalItems = await query.CountAsync();
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)

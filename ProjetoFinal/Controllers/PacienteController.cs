@@ -18,7 +18,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Register([FromBody] RegisterPacienteRequest paciente)
         {
             try
@@ -37,7 +37,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("update")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] UpdatePacienteRequest pacienteUpdate)
         {
             try
@@ -56,7 +56,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("buscar")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetPaciente(string parametro)
         {
             if (string.IsNullOrEmpty(parametro))
@@ -75,7 +75,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("id")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetPacienteById(int parametro)
         {
             if (parametro == null || parametro == 0)
@@ -89,19 +89,19 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("paginado")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetPagedPacientesByProfissional([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                //var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                //if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
-                //{
-                //    return Unauthorized("ID do profissional não encontrado no token.");
-                //}
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                {
+                    return Unauthorized("ID do profissional não encontrado no token.");
+                }
 
-                var pacientes = await _service.GetPagedPacientesByProfissionalAsync(0, pageNumber, pageSize);
+                var pacientes = await _service.GetPagedPacientesByProfissionalAsync(profissionalId, pageNumber, pageSize);
                 return Ok(pacientes);
             }
             catch (Exception ex)
@@ -112,6 +112,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("search")]
+        [Authorize]
         public async Task<IActionResult> GetPacientesSearch([FromQuery] string parametro, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
@@ -130,7 +131,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("alergias")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetAlergias()
         {
             var paciente = await _service.GetAlergiasAsync();
@@ -138,7 +139,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("comorbidades")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetComorbidades()
         {
             var paciente = await _service.GetComorbidadesAsync();

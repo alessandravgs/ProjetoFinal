@@ -18,6 +18,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
+        [Authorize]
         public async Task<IActionResult> Register([FromBody] RegisterCobertura cobertura)
         {
             try
@@ -36,6 +37,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("update")]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] CoberturaUpdateRequest cobertura)
         {
             try
@@ -54,6 +56,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("paginado")]
+        [Authorize]
         public async Task<IActionResult> GetCoberturasPaginado([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
@@ -69,6 +72,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("search")]
+        [Authorize]
         public async Task<IActionResult> GetCoberturasSearch([FromQuery] string parametro, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try

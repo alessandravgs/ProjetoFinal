@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjetoFinal.Interfaces;
 using ProjetoFinal.Requests.Lesao;
+using System.Security.Claims;
 
 namespace ProjetoFinal.Controllers
 {
@@ -17,7 +18,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("register")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Register([FromBody] RegisterLesaoRequest lesao)
         {
             try
@@ -40,7 +41,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpPost("update")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] LesaoUpdateRequest lesaoUpdate)
         {
             try
@@ -59,7 +60,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("id")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetLesaoById(int parametro)
         {
             if (parametro == null || parametro == 0)
@@ -73,19 +74,19 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("paginado")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetPagedLesaoByProfissional([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                //var userId = User.FindFirst(ClaimTypes.Name)?.Value;
+                var userId = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                //if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
-                //{
-                //    return Unauthorized("ID do profissional não encontrado no token.");
-                //}
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int profissionalId))
+                {
+                    return Unauthorized("ID do profissional não encontrado no token.");
+                }
 
-                var lesoes = await _service.GetPagedLesoesByProfissionalAsync(0, pageNumber, pageSize);
+                var lesoes = await _service.GetPagedLesoesByProfissionalAsync(profissionalId, pageNumber, pageSize);
                 return Ok(lesoes);
             }
             catch (Exception ex)
@@ -96,6 +97,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("search")]
+        [Authorize]
         public async Task<IActionResult> GetLesoesSearch([FromQuery] string parametro, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
@@ -114,6 +116,7 @@ namespace ProjetoFinal.Controllers
         }
 
         [HttpGet("paciente")]
+        [Authorize]
         public async Task<IActionResult> GetLesoesByPaciente([FromQuery] int parametro, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
