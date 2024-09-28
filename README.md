@@ -2,7 +2,9 @@
 
 Esta documentação descreve as funcionalidades da API responsável por gerir o sistema Curativo Vital.
 O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
-A api tem como objetivo ser apresentada como projeto final de pós graduação.
+
+- A api tem como objetivo ser apresentada como projeto final de pós graduação.
+- Front-end: [https://github.com/alessandravgs/ProjetoFinal](https://github.com/alessandravgs/curativos-vue)
 
 ## Informações de Contato
 
