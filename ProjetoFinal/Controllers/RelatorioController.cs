@@ -26,13 +26,8 @@ namespace ProjetoFinal.Controllers
             try
             {
                 var retorno = await _service.RelatorioCurativosTotalPacienteAsync(idPaciente);
-                var options = new JsonSerializerOptions
-                {
-                    ReferenceHandler = ReferenceHandler.Preserve,
-                    WriteIndented = true
-                };
-                var json = JsonSerializer.Serialize(retorno, options);
-                return Ok(json);
+                
+                return Ok(retorno);
             }
             catch (FileNotFoundException ex)
             {

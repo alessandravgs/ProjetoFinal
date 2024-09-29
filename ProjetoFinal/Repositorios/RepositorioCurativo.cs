@@ -6,6 +6,7 @@ using ProjetoFinal.Models;
 using ProjetoFinal.Requests;
 using ProjetoFinal.Requests.Coberturas;
 using ProjetoFinal.Requests.Curativo;
+using ProjetoFinal.Requests.Paciente;
 using ProjetoFinal.Requests.Relatorios;
 using System.Linq.Expressions;
 
@@ -325,7 +326,7 @@ namespace ProjetoFinal.Repositorios
 
         private async Task<IEnumerable<PacienteCurativoRelatorio>> GetPacienteCurativoRelatorio(IQueryable<Curativo> consulta)
         {
-            return await consulta.GroupBy(x => new { x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento })
+            var con = await consulta.GroupBy(x => new { x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento })
                 .Select(x => new PacienteCurativoRelatorio()
                 {
                     NomePaciente = x.Key.Nome,
@@ -333,7 +334,13 @@ namespace ProjetoFinal.Repositorios
                     DataNascimento = x.Key.DataNascimento,
                     Curativos = x.Select(y => new DetalhesCurativoRelatorio
                     {
-                        Coberturas = y.Coberturas.ToList(),
+                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult 
+                        { 
+                            Id = a.Id, 
+                            Nome = a.Nome, 
+                            Descricao = a.Descricao 
+                        
+                        }).ToList() ?? new List<CoberturaResumoResult>(),
                         Data = y.Data,
                         Lesao = y.Lesao.Detalhes,
                         Observacoes = y.Observacoes,
@@ -341,6 +348,8 @@ namespace ProjetoFinal.Repositorios
                         Profissional = y.Profissional.Nome,
                     }).ToList()
                 }).ToListAsync();
+
+            return con;
         }
 
         public async Task<IEnumerable<ProfissionalCurativoRelatorio>> GetRelatorioCurativosPorPeriodoProfissionalAsync(int idProfissional, DateTime dataInicial, DateTime dataFinal)
@@ -354,7 +363,7 @@ namespace ProjetoFinal.Repositorios
                     EmailProfissional = x.Key.Email,
                     Curativos = x.Select(y => new DetalhesCurativoProfissionalRelatorio
                     {
-                        Coberturas = y.Coberturas.ToList(),
+                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult { Id = a.Id, Nome = a.Nome }).ToList() ?? new List<CoberturaResumoResult>(),
                         Data = y.Data,
                         Lesao = y.Lesao.Detalhes,
                         Observacoes = y.Observacoes,
@@ -377,7 +386,13 @@ namespace ProjetoFinal.Repositorios
                     DataNascimento = x.Key.DataNascimento,
                     Curativos = x.Select(y => new CurativosLesaoDetalhes
                     {
-                        Coberturas = y.Coberturas.ToList(),
+                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult
+                        {
+                            Id = a.Id,
+                            Nome = a.Nome,
+                            Descricao = a.Descricao
+
+                        }).ToList() ?? new List<CoberturaResumoResult>(),
                         Data = y.Data,
                         Observacoes = y.Observacoes,
                         Orientacoes = y.Orientacoes,

@@ -1,5 +1,6 @@
 ﻿using ProjetoFinal.Models;
 using ProjetoFinal.Models.Enums;
+using ProjetoFinal.Requests.Coberturas;
 
 namespace ProjetoFinal.Requests.Relatorios
 {
@@ -18,6 +19,6 @@ namespace ProjetoFinal.Requests.Relatorios
         public DateTime Data { get; set; }
         public string Observacoes { get; set; }
         public string Orientacoes { get; set; }
-        public virtual List<Cobertura> Coberturas { get; set; }
+        public virtual List<CoberturaResumoResult> Coberturas { get; set; }
     }
 }
