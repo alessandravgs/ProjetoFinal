@@ -28,7 +28,7 @@ namespace ProjetoFinal.Service
                 throw new UnauthorizedAccessException("Login não autorizado.");
 
             var jwtSettings = _configuration.GetSection("Jwt");
-            var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+            var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];
 
@@ -79,12 +79,6 @@ namespace ProjetoFinal.Service
         public async Task<IEnumerable<Curativo>> GetCurativosByProfissionalIdAsync(int id)
         {
             var lista = await _repositorio.GetCurativosByProfissionalAsync(id);
-            return lista;
-        }
-
-        public async Task<IEnumerable<Paciente>> GetPacientesByProfissionalAsync(int id)
-        {
-            var lista = await _repositorio.GetPacientesByProfissional(id);
             return lista;
         }
     }

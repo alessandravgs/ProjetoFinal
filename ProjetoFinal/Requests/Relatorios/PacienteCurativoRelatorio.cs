@@ -8,5 +8,11 @@ namespace ProjetoFinal.Requests.Relatorios
         public Sexo Sexo { get; set; }
         public DateTime DataNascimento { get; set; }
         public List<DetalhesCurativoRelatorio> Curativos { get; set; }
+
+        public PacienteCurativoRelatorio()
+        {
+            NomePaciente = string.Empty;
+            Curativos = [];
+        }
     }
 }

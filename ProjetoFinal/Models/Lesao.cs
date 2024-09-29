@@ -23,5 +23,13 @@ namespace ProjetoFinal.Models
         public virtual Paciente Paciente { get; set; }
         public virtual ICollection<Curativo> Curativos { get; set; }
         public virtual ICollection<EvolucaoLesao> Evolucoes { get; set; }
+
+        public Lesao()
+        {
+            Detalhes = string.Empty;
+            Paciente = new Paciente();
+            Curativos = [];
+            Evolucoes = [];
+        }
     }
 }

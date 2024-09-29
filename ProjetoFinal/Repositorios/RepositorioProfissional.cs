@@ -108,7 +108,7 @@ namespace ProjetoFinal.Repositorios
             return await _context.Curativos.Where(c => c.Profissional.Id == id).ToListAsync();
         }
 
-        public async Task<IEnumerable<Paciente>> GetPacientesByProfissional(int id)
+        public IEnumerable<Paciente> GetPacientesByProfissional(int id)
         {
             return new List<Paciente>();
         }

@@ -12,5 +12,14 @@ namespace ProjetoFinal.Requests.Relatorios
         public string Observacoes { get; set; }
         public string Orientacoes { get; set; }
         public virtual List<CoberturaResumoResult> Coberturas { get; set; }
+
+        public DetalhesCurativoProfissionalRelatorio()
+        {
+            NomePaciente = string.Empty;
+            Lesao = string.Empty;
+            Observacoes = string.Empty;
+            Orientacoes = string.Empty;
+            Coberturas = [];
+        }
     }
 }

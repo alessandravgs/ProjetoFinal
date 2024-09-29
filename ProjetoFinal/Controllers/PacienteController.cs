@@ -78,7 +78,7 @@ namespace ProjetoFinal.Controllers
         [Authorize]
         public async Task<IActionResult> GetPacienteById(int parametro)
         {
-            if (parametro == null || parametro == 0)
+            if (parametro == 0)
             {
                 return Unauthorized("Parâmetro inválido.");
             }

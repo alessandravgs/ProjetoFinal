@@ -17,6 +17,6 @@ namespace ProjetoFinal.Interfaces
 
         Task<IEnumerable<Curativo>> GetCurativosByProfissionalAsync(int id);
 
-        Task<IEnumerable<Paciente>> GetPacientesByProfissional(int id);
+        IEnumerable<Paciente> GetPacientesByProfissional(int id);
     }
 }

@@ -9,5 +9,15 @@
         public string Login { get; set; }
         public string Telefone { get; set; }
         public string Senha { get; set; }
+
+        public Profissional()
+        {
+            Nome = string.Empty;
+            Email = string.Empty;
+            Cpf = string.Empty;
+            Login = string.Empty;
+            Telefone = string.Empty;
+            Senha = string.Empty;
+        }
     }
 }

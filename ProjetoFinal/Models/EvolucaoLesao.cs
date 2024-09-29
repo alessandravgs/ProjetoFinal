@@ -14,5 +14,10 @@ namespace ProjetoFinal.Models
         public int? CurativoId { get; set; }
         public virtual Curativo? Curativo { get; set; }
         public virtual Profissional? Profissional { get; set; }
+
+        public EvolucaoLesao()
+        {
+            Lesao = new Lesao();
+        }
     }
 }

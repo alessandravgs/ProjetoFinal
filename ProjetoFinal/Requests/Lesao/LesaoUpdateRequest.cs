@@ -23,5 +23,10 @@ namespace ProjetoFinal.Requests.Lesao
         public int Altura { get; set; }
         public int Largura { get; set; }
         public int Profundidade { get; set; }
+
+        public LesaoUpdateRequest()
+        {
+            Detalhes = string.Empty;
+        }
     }
 }

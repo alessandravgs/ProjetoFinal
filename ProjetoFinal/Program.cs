@@ -23,7 +23,7 @@ builder.Services.AddScoped<IRepositorioLesao, RepositorioLesao>();
 
 // Captura a configuração JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 var issuer = jwtSettings["Issuer"];
 var audience = jwtSettings["Audience"];
 

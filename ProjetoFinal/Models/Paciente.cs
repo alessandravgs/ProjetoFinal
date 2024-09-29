@@ -14,5 +14,15 @@ namespace ProjetoFinal.Models
         public virtual ICollection<Alergia> Alergias { get; set; }
         public virtual ICollection<Comorbidade> Comorbidades { get; set; }
         public virtual ICollection<Lesao> Lesoes { get; set; } = new List<Lesao>();
+
+        public Paciente()
+        {
+            Alergias = [];
+            Comorbidades = [];
+            Nome = string.Empty; 
+            Cpf = string.Empty;  
+            Telefone = string.Empty; 
+            Email = string.Empty; 
+        }
     }
 }

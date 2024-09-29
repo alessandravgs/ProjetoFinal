@@ -11,5 +11,12 @@ namespace ProjetoFinal.Requests.Lesao
         public Regiao Regiao { get; set; }
         public LadoRegiao LadoRegiao { get; set; }
         public Situacao Situacao { get; set; }
+
+        public LesaoResumoResult()
+        {
+            Detalhes = string.Empty;
+            Paciente = string.Empty;
+            PacienteCpf = string.Empty;
+        }
     }
 }

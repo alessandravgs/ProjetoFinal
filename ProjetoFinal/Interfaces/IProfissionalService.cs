@@ -11,6 +11,5 @@ namespace ProjetoFinal.Interfaces
         Task<ProfissionalDto> UpdateProfissionalAsync(ProfissionalDto profissionalAtualizar, int id);
         Task RegistrarProfissionalAsync(RegisterProfissionalRequest profissional);
         Task<IEnumerable<Curativo>> GetCurativosByProfissionalIdAsync(int id);
-        Task<IEnumerable<Paciente>> GetPacientesByProfissionalAsync(int id);
     }
 }

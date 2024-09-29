@@ -11,6 +11,13 @@ namespace ProjetoFinal.Requests.Relatorios
         public Sexo Sexo { get; set; }
         public DateTime DataNascimento { get; set; }
         public List<CurativosLesaoDetalhes> Curativos { get; set; }
+
+        public LesaoCurativoRelatorio()
+        {
+            Lesao = string.Empty;
+            NomePaciente = string.Empty;
+            Curativos = [];
+        }
     }
 
     public class CurativosLesaoDetalhes
@@ -20,5 +27,13 @@ namespace ProjetoFinal.Requests.Relatorios
         public string Observacoes { get; set; }
         public string Orientacoes { get; set; }
         public virtual List<CoberturaResumoResult> Coberturas { get; set; }
+
+        public CurativosLesaoDetalhes()
+        {
+            Profissional = string.Empty;
+            Orientacoes = string.Empty;
+            Observacoes = string.Empty;
+            Coberturas = [];
+        }
     }
 }

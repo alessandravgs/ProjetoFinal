@@ -24,6 +24,12 @@ namespace ProjetoFinal.Requests.Lesao
         public double Altura { get; set; }
         public double Largura { get; set; }
         public double Profundidade { get; set; }
+
+        public LesaoDto()
+        {
+            Paciente = new PacienteLesaoDto();
+            Detalhes = string.Empty;
+        }
     }
 
     public class PacienteLesaoDto
@@ -33,5 +39,11 @@ namespace ProjetoFinal.Requests.Lesao
         public DateTime DataNascimento { get; set; }
         public string Cpf { get; set; }
         public Sexo Sexo { get; set; }
+
+        public PacienteLesaoDto()
+        {
+            Nome = string.Empty;
+            Cpf = string.Empty;
+        }
     }
 }

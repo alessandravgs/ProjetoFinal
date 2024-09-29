@@ -1,4 +1,5 @@
-﻿using ProjetoFinal.Models.Enums;
+﻿using ProjetoFinal.Models;
+using ProjetoFinal.Models.Enums;
 using ProjetoFinal.Requests.Coberturas;
 
 namespace ProjetoFinal.Requests.Curativo
@@ -14,6 +15,17 @@ namespace ProjetoFinal.Requests.Curativo
         public string Detalhes { get; set; }
         public DateTime Data { get; set; }
         public List<string> Fotos { get; set; }
+
+        public CurativoDto()
+        {
+            Orientacoes = string.Empty; 
+            Detalhes = string.Empty;
+            Fotos = [];
+            Coberturas = [];
+            Paciente = new PacienteCurativoDto();
+            Lesao = new LesaoCurativoDto();
+            Evolucao = new EvolucaoLesaoCurativoDto();
+        }
     }
 
     public class PacienteCurativoDto
@@ -24,6 +36,13 @@ namespace ProjetoFinal.Requests.Curativo
         public DateTime DataNascimento { get; set; }
         public string Cpf { get; set; }
         public string Telefone { get; set; }
+
+        public PacienteCurativoDto()
+        {
+            Telefone = string.Empty;
+            Nome = string.Empty;
+            Cpf = string.Empty;
+        }
     }
 
     public class LesaoCurativoDto
@@ -43,6 +62,11 @@ namespace ProjetoFinal.Requests.Curativo
         public bool Desbridamento { get; set; }
         public bool Traumatica { get; set; }
         public string Detalhes { get; set; }
+
+        public LesaoCurativoDto()
+        {
+            Detalhes = string.Empty;
+        }
     }
 
     public class EvolucaoLesaoCurativoDto
