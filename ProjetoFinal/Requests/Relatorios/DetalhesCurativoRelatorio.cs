@@ -10,7 +10,7 @@ namespace ProjetoFinal.Requests.Relatorios
         public DateTime Data { get; set; }
         public string Observacoes { get; set; }
         public string Orientacoes { get; set; }
-        public virtual List<CoberturaResumoResult> Coberturas { get; set; }
+        public virtual List<CoberturaResumida> Coberturas { get; set; }
 
         public DetalhesCurativoRelatorio()
         {

@@ -312,6 +312,8 @@ namespace ProjetoFinal.Repositorios
             };
         }
 
+        // Seção de Relatórios
+
         public async Task<IEnumerable<PacienteCurativoRelatorio>> GetRelatorioCurativosTotaisPacienteAsync(int idPaciente)
         {
             var consulta = _context.Curativos.Where(x => x.Lesao.Paciente.Id == idPaciente);
@@ -334,13 +336,7 @@ namespace ProjetoFinal.Repositorios
                     DataNascimento = x.Key.DataNascimento,
                     Curativos = x.Select(y => new DetalhesCurativoRelatorio
                     {
-                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult 
-                        { 
-                            Id = a.Id, 
-                            Nome = a.Nome, 
-                            Descricao = a.Descricao 
-                        
-                        }).ToList() ?? new List<CoberturaResumoResult>(),
+                        Coberturas = y.Coberturas.Select(a => new CoberturaResumida { Nome = a.Nome }).ToList() ?? new List<CoberturaResumida>(),
                         Data = y.Data,
                         Lesao = y.Lesao.Detalhes,
                         Observacoes = y.Observacoes,
@@ -363,7 +359,7 @@ namespace ProjetoFinal.Repositorios
                     EmailProfissional = x.Key.Email,
                     Curativos = x.Select(y => new DetalhesCurativoProfissionalRelatorio
                     {
-                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult { Id = a.Id, Nome = a.Nome, Descricao = a.Descricao }).ToList() ?? new List<CoberturaResumoResult>(),
+                        Coberturas = y.Coberturas.Select(a => new CoberturaResumida { Nome = a.Nome }).ToList() ?? new List<CoberturaResumida>(),
                         Data = y.Data,
                         Lesao = y.Lesao.Detalhes,
                         Observacoes = y.Observacoes,
@@ -386,13 +382,7 @@ namespace ProjetoFinal.Repositorios
                     DataNascimento = x.Key.DataNascimento,
                     Curativos = x.Select(y => new CurativosLesaoDetalhes
                     {
-                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult
-                        {
-                            Id = a.Id,
-                            Nome = a.Nome,
-                            Descricao = a.Descricao
-
-                        }).ToList() ?? new List<CoberturaResumoResult>(),
+                        Coberturas = y.Coberturas.Select(a => new CoberturaResumida { Nome = a.Nome }).ToList() ?? new List<CoberturaResumida>(),
                         Data = y.Data,
                         Observacoes = y.Observacoes,
                         Orientacoes = y.Orientacoes,
