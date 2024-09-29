@@ -363,7 +363,7 @@ namespace ProjetoFinal.Repositorios
                     EmailProfissional = x.Key.Email,
                     Curativos = x.Select(y => new DetalhesCurativoProfissionalRelatorio
                     {
-                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult { Id = a.Id, Nome = a.Nome }).ToList() ?? new List<CoberturaResumoResult>(),
+                        Coberturas = y.Coberturas.Select(a => new CoberturaResumoResult { Id = a.Id, Nome = a.Nome, Descricao = a.Descricao }).ToList() ?? new List<CoberturaResumoResult>(),
                         Data = y.Data,
                         Lesao = y.Lesao.Detalhes,
                         Observacoes = y.Observacoes,
