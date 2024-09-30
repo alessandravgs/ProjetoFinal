@@ -13,12 +13,6 @@ O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
 - **Email:** alessandravgs0@gmail.com
 - **GitHub:** [GitHub](https://github.com/alessandravgs)
 
-## Como executar o projeto
-
-- Baixar o código
-- Abrir no visual studio
-- Clicar em executar
-
 ## Tecnologias usadas
 
 - C#
@@ -26,6 +20,40 @@ O sistema faz acompanhamento de lesões a partir de curativos e avaliações.
 - Entity Framework
 - JWT
 - Banco de dados Sql Server
+
+## Como executar o projeto
+
+- Baixar o código
+- Abrir no visual studio:
+
+- Utilizar o Sql Server
+
+Para utilizarmos o SQL Server no projeto, é preciso que você tenha instalado o seu componente. Geralmente, este componente já é instalado junto com o Visual Studio quando você faz o processo padrão de instalação, mas você pode seguir o passo a passo abaixo para conferir se tudo está instalado corretamente:
+
+1. Abra o Visual Studio Installer;
+2. Em Visual Studio Community 2022, na aba instalados, clique em Modificar;
+3. Na aba Componentes individuais, pesquise por “sql” na caixa de pesquisa e verifique se o componente SQL Server Express 2019 LocalDB está assinalado, conforme a imagem abaixo:
+
+![image](https://github.com/user-attachments/assets/5fe17a0c-338f-478a-9e25-c30f6533210b)
+
+4. Se tiver assinalado, basta fechar o Visual Studio Installer e prosseguir com as atividades;
+5. Caso o componente não esteja selecionado, basta ativar a caixa de seleção e clicar em Modificar no canto inferior direito.
+
+O próximo passo é executar as Migrations existentes para que o banco seja devidamente criado:
+
+Para fazer isso, vamos em "Ferramentas > Gerenciador de pacotes do NuGet > Console do gerenciador de pacotes". É nesse console que vamos executar os comandos relacionados às migrations:
+
+![image](https://github.com/user-attachments/assets/07ea2039-2163-4248-b502-38e53a78613b)
+
+Após achar esse console basta digitar: 
+
+```bash
+update-database
+```
+
+E o banco de dados será criado já pronto para ser executado.
+
+- Clicar em executar e a API já subirá na porta 7164 com swagger aberto.
 
 
 ## Enpoints de Cobertura
