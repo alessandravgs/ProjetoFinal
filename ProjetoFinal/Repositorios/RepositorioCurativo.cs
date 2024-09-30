@@ -317,23 +317,26 @@ namespace ProjetoFinal.Repositorios
         public async Task<IEnumerable<PacienteCurativoRelatorio>> GetRelatorioCurativosTotaisPacienteAsync(int idPaciente)
         {
             var consulta = _context.Curativos.Where(x => x.Lesao.Paciente.Id == idPaciente);
-            return await GetPacienteCurativoRelatorio(consulta);
+            return await GetPacienteCurativoRelatorioSemFotos(consulta);
         }
 
         public async Task<IEnumerable<PacienteCurativoRelatorio>> GetRelatorioCurativosPorPeriodoPacienteAsync(int idPaciente, DateTime dataInicial, DateTime dataFinal)
         {
-            var consulta = _context.Curativos.Where(x => x.Lesao.Paciente.Id == idPaciente && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataInicial.Date);
+            var consulta = _context.Curativos.Where(x => x.Lesao.Paciente.Id == idPaciente && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataFinal.Date);
             return await GetPacienteCurativoRelatorio(consulta);
         }
 
-        private async Task<IEnumerable<PacienteCurativoRelatorio>> GetPacienteCurativoRelatorio(IQueryable<Curativo> consulta)
+        private async Task<IEnumerable<PacienteCurativoRelatorio>> GetPacienteCurativoRelatorioSemFotos(IQueryable<Curativo> consulta)
         {
-            var con = await consulta.GroupBy(x => new { x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento })
+
+            return await consulta.GroupBy(x => new { x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento, x.Lesao.Paciente.Cpf, x.Lesao.Paciente.Telefone })
                 .Select(x => new PacienteCurativoRelatorio()
                 {
                     NomePaciente = x.Key.Nome,
                     Sexo = x.Key.Sexo,
                     DataNascimento = x.Key.DataNascimento,
+                    Cpf = x.Key.Cpf,
+                    Contato = x.Key.Telefone,
                     Curativos = x.Select(y => new DetalhesCurativoRelatorio
                     {
                         Coberturas = y.Coberturas.Select(a => new CoberturaResumida { Nome = a.Nome }).ToList() ?? new List<CoberturaResumida>(),
@@ -342,15 +345,65 @@ namespace ProjetoFinal.Repositorios
                         Observacoes = y.Observacoes,
                         Orientacoes = y.Orientacoes,
                         Profissional = y.Profissional.Nome,
+                        Altura = y.EvolucaoLesao.Altura,
+                        Profundidade = y.EvolucaoLesao.Profundidade,
+                        Largura = y.EvolucaoLesao.Largura,
+                        Situacao = y.EvolucaoLesao.Situacao,
                     }).ToList()
                 }).ToListAsync();
+        }
 
-            return con;
+        private async Task<IEnumerable<PacienteCurativoRelatorio>> GetPacienteCurativoRelatorio(IQueryable<Curativo> consulta)
+        {
+            var result = await consulta.GroupBy(x => new
+            {
+                x.Lesao.Paciente.Nome,
+                x.Lesao.Paciente.Sexo,
+                x.Lesao.Paciente.DataNascimento,
+                x.Lesao.Paciente.Cpf,
+                x.Lesao.Paciente.Telefone
+            })
+            .Select(x => new PacienteCurativoRelatorio()
+            {
+                NomePaciente = x.Key.Nome,
+                Sexo = x.Key.Sexo,
+                DataNascimento = x.Key.DataNascimento,
+                Cpf = x.Key.Cpf,
+                Contato = x.Key.Telefone,
+                Curativos = x.Select(y => new DetalhesCurativoRelatorio
+                {
+                    Coberturas = y.Coberturas.Select(a => new CoberturaResumida { Nome = a.Nome }).ToList() ?? new List<CoberturaResumida>(),
+                    Data = y.Data,
+                    Lesao = y.Lesao.Detalhes,
+                    Observacoes = y.Observacoes,
+                    Orientacoes = y.Orientacoes,
+                    Profissional = y.Profissional.Nome,
+                    Altura = y.EvolucaoLesao.Altura,
+                    Profundidade = y.EvolucaoLesao.Profundidade,
+                    Largura = y.EvolucaoLesao.Largura,
+                    Situacao = y.EvolucaoLesao.Situacao,
+                    FotosByte = y.Imagens.Select(x => x.Foto).ToList()
+                }).ToList()
+            }).ToListAsync();
+
+            foreach (var paciente in result)
+            {
+                foreach (var curativo in paciente.Curativos)
+                {
+                    if (curativo.FotosByte != null && curativo.FotosByte.Count != 0)
+                    {
+                        curativo.Fotos = curativo.FotosByte.Select(ConvertByteArrayToBase64).ToList();
+                        curativo.FotosByte = [];
+                    }
+                }
+            }
+
+            return result;
         }
 
         public async Task<IEnumerable<ProfissionalCurativoRelatorio>> GetRelatorioCurativosPorPeriodoProfissionalAsync(int idProfissional, DateTime dataInicial, DateTime dataFinal)
         {
-            return await _context.Curativos.Where(x => x.Profissional != null && x.Profissional.Id == idProfissional && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataInicial.Date)
+            var con = await _context.Curativos.Where(x => x.Profissional != null && x.Profissional.Id == idProfissional && x.Data.Date >= dataInicial.Date && x.Data.Date <= dataFinal.Date)
                 .GroupBy(x => new { x.Profissional.Nome, x.Profissional.Cpf, x.Profissional.Email })
                 .Select(x => new ProfissionalCurativoRelatorio
                 {
@@ -364,22 +417,30 @@ namespace ProjetoFinal.Repositorios
                         Lesao = y.Lesao.Detalhes,
                         Observacoes = y.Observacoes,
                         Orientacoes = y.Orientacoes,
+                        Altura = y.EvolucaoLesao.Altura,
+                        Profundidade = y.EvolucaoLesao.Profundidade,
+                        Largura = y.EvolucaoLesao.Largura,
+                        Situacao = y.EvolucaoLesao.Situacao,
                         NomePaciente = y.Lesao.Paciente.Nome,
                         SexoPaciente = y.Lesao.Paciente.Sexo
                     }).ToList()
                 }).ToListAsync();
+
+            return con;
         }
 
         public async Task<IEnumerable<LesaoCurativoRelatorio>> GetRelatorioCurativosByLesao(int idLesao)
         {
             return await _context.Curativos.Where(x => x.Lesao.Id == idLesao)
-                .GroupBy(x => new { x.Lesao.Detalhes, x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento })
+                .GroupBy(x => new { x.Lesao.Detalhes, x.Lesao.Paciente.Nome, x.Lesao.Paciente.Sexo, x.Lesao.Paciente.DataNascimento, x.Lesao.Paciente.Cpf, x.Lesao.Paciente.Telefone })
                 .Select(x => new LesaoCurativoRelatorio
                 {
                     Lesao = x.Key.Detalhes,
                     NomePaciente = x.Key.Nome,
                     Sexo = x.Key.Sexo,
                     DataNascimento = x.Key.DataNascimento,
+                    Cpf = x.Key.Cpf,
+                    Contato = x.Key.Telefone,
                     Curativos = x.Select(y => new CurativosLesaoDetalhes
                     {
                         Coberturas = y.Coberturas.Select(a => new CoberturaResumida { Nome = a.Nome }).ToList() ?? new List<CoberturaResumida>(),
@@ -387,6 +448,10 @@ namespace ProjetoFinal.Repositorios
                         Observacoes = y.Observacoes,
                         Orientacoes = y.Orientacoes,
                         Profissional = y.Profissional.Nome,
+                        Altura = y.EvolucaoLesao.Altura,
+                        Profundidade = y.EvolucaoLesao.Profundidade,
+                        Largura = y.EvolucaoLesao.Largura,
+                        Situacao = y.EvolucaoLesao.Situacao,
                     }).ToList()
                 }).ToListAsync();
         }

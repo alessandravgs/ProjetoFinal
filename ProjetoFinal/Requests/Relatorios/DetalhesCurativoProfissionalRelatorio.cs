@@ -12,6 +12,10 @@ namespace ProjetoFinal.Requests.Relatorios
         public string Observacoes { get; set; }
         public string Orientacoes { get; set; }
         public virtual List<CoberturaResumida> Coberturas { get; set; }
+        public Situacao Situacao { get; set; }
+        public double Altura { get; set; }
+        public double Largura { get; set; }
+        public double Profundidade { get; set; }
 
         public DetalhesCurativoProfissionalRelatorio()
         {

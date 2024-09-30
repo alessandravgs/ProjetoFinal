@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoFinal.Interfaces;
-using ProjetoFinal.Requests;
 using System.Security.Claims;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 
 namespace ProjetoFinal.Controllers
 {
@@ -45,8 +42,8 @@ namespace ProjetoFinal.Controllers
         {
             try
             {
-                await _service.RelatorioCurativosPacientePeriodoAsync(idPaciente, dataInicial, dataFinal);
-                return Ok();
+                var retorno = await _service.RelatorioCurativosPacientePeriodoAsync(idPaciente, dataInicial, dataFinal);
+                return Ok(retorno);
             }
             catch (FileNotFoundException ex)
             {
@@ -71,8 +68,8 @@ namespace ProjetoFinal.Controllers
                     return Unauthorized("ID do profissional não encontrado no token.");
                 }
 
-                await _service.RelatorioCurativosByProfissionalPeriodoAsync(profissionalId, dataInicial, dataFinal);
-                return Ok();
+                var retorno = await _service.RelatorioCurativosByProfissionalPeriodoAsync(1, dataInicial, dataFinal);
+                return Ok(retorno);
             }
             catch (FileNotFoundException ex)
             {
@@ -90,8 +87,8 @@ namespace ProjetoFinal.Controllers
         {
             try
             {
-                await _service.RelatorioCurativosByLesaoAsync(lesaoId);
-                return Ok();
+                var retorno = await _service.RelatorioCurativosByLesaoAsync(lesaoId);
+                return Ok(retorno);
             }
             catch (FileNotFoundException ex)
             {
